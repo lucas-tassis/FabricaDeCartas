@@ -1,0 +1,43 @@
+import { MM_TO_PX } from './constants';
+
+export const getSectionBounds = (section, gridPx, canvasWidthPx, canvasHeightPx) => {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  section.squares.forEach(key => {
+    const [x, y] = key.split(',').map(Number);
+    if (x < minX) minX = x;
+    if (y < minY) minY = y;
+    if (x > maxX) maxX = x;
+    if (y > maxY) maxY = y;
+  });
+
+  let width = maxX - minX + gridPx;
+  let height = maxY - minY + gridPx;
+
+  if (canvasWidthPx && maxX + gridPx >= canvasWidthPx - gridPx) {
+    width = canvasWidthPx - minX;
+  }
+  if (canvasHeightPx && maxY + gridPx >= canvasHeightPx - gridPx) {
+    height = canvasHeightPx - minY;
+  }
+
+  return { minX, minY, width, height };
+};
+
+export const buildDownloadLink = (blob, filename) => {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  return url;
+};
+
+export const safeParse = (val, fallback = 0) => {
+  if (val === undefined || val === null) return fallback;
+  const str = String(val).replace(',', '.');
+  const num = parseFloat(str);
+  return isNaN(num) ? fallback : num;
+};
+

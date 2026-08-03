@@ -1,0 +1,23 @@
+# Compilados e JARs
+*.jar
+*.war
+*.ear
+*.class
+target/
+backend/target/
+
+# Node / React
+node_modules/
+backend/frontend/node_modules/
+backend/frontend/dist/
+
+# Editor / IDE
+.vscode/
+.settings/
+.classpath
+.factorypath
+.project
+.DS_Store
+
+# Logs
+*.log

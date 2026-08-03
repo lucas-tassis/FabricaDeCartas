@@ -1,0 +1,13 @@
+.git
+.gitignore
+.vscode
+.project
+.classpath
+.factorypath
+.settings
+target/
+backend/target/
+backend/frontend/node_modules/
+backend/frontend/dist/
+FabricaDeCartas.jar
+*.log
