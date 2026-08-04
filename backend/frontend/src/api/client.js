@@ -1,5 +1,5 @@
 // Centralizes all API communication. Never use fetch() directly in components.
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 function buildErrorLog(status, statusText, rawBody, context = null) {
   const lines = [];

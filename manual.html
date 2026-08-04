@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Manual do Usuário - Fábrica de Cartas</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+    @page {
+      size: A4;
+      margin: 15mm 15mm 20mm 15mm;
+      @bottom-right {
+        content: "Página " counter(page);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cover Header */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      color: #ffffff;
+      padding: 36px 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+    }
+
+    .header-banner h1 {
+      margin: 0 0 8px 0;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #6366f1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .header-banner p {
+      margin: 0;
+      font-size: 16px;
+      color: #cbd5e1;
+      font-weight: 400;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e0e7ff;
+    }
+
+    /* Section titles */
+    h2 {
+      color: #0f172a;
+      font-size: 20px;
+      font-weight: 700;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      color: #334155;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+
+    p, li {
+      font-size: 13.5px;
+      color: #334155;
+    }
+
+    ul, ol {
+      padding-left: 20px;
+      margin-top: 6px;
+      margin-bottom: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* Feature Cards Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #6366f1;
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .card-box h4 {
+      margin: 0 0 6px 0;
+      font-size: 14px;
+      color: #1e1b4b;
+      font-weight: 700;
+    }
+
+    .card-box p {
+      margin: 0;
+      font-size: 12.5px;
+      color: #475569;
+    }
+
+    /* Callout Box */
+    .callout {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #22c55e;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin: 18px 0;
+      page-break-inside: avoid;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #15803d;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .callout-body {
+      color: #166534;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+      page-break-inside: avoid;
+    }
+
+    th {
+      background-color: #1e293b;
+      color: #ffffff;
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+
+    /* Code block */
+    code {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <h1>🎴 Fábrica de Cartas</h1>
+    <p>Manual Completo do Usuário & Guia de Testes</p>
+    <div class="badge-bar">
+      <span class="badge">Versão 1.0</span>
+      <span class="badge">Gerador de Cartas de Jogos</span>
+      <span class="badge">Suporte a PDF & ZIP</span>
+    </div>
+  </div>
+
+  <h2>1. O que é a Fábrica de Cartas?</h2>
+  <p>A <strong>Fábrica de Cartas</strong> é uma ferramenta web desenvolvida para permitir a criação e geração em massa de cartas personalizadas para jogos de tabuleiro (board games), card games e protótipos rápidos.</p>
+  <p>Ela funciona integrando os dados de uma planilha Excel (textos, atributos, caminhos de imagem e cores) com um editor visual drag-and-drop intuitivo.</p>
+
+  <h2>2. Estrutura da Planilha Excel (.xlsx)</h2>
+  <p>Para gerar suas cartas, prepare um arquivo Excel no seguinte formato:</p>
+  <ul>
+    <li><strong>Primeira Linha (Cabeçalhos)</strong>: Nomeia cada coluna (ex: <code>Nome</code>, <code>Ataque</code>, <code>Defesa</code>, <code>Foto</code>, <code>CorFundo</code>).</li>
+    <li><strong>Linhas Seguintes (Cartas)</strong>: Cada linha gera 1 carta individual automaticamente.</li>
+  </ul>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome (Texto)</th>
+        <th>Tipo (Texto)</th>
+        <th>Ataque (Número)</th>
+        <th>Foto (Imagem)</th>
+        <th>CorFundo (Cor)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dragão de Fogo</td>
+        <td>Monstro</td>
+        <td>8</td>
+        <td>dragao.jpg</td>
+        <td>#FF4444</td>
+      </tr>
+      <tr>
+        <td>Escudo Real</td>
+        <td>Item</td>
+        <td>0</td>
+        <td>escudo.png</td>
+        <td>#4488FF</td>
+      </tr>
+      <tr>
+        <td>Poção Solar</td>
+        <td>Magia</td>
+        <td>0</td>
+        <td>pocao.jpg</td>
+        <td>#FFCC00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Como Usar a Aplicação (Passo a Passo)</h2>
+
+  <div class="grid-2">
+    <div class="card-box">
+      <h4>1. Upload da Planilha</h4>
+      <p>No painel esquerdo, faça o upload do arquivo <code>.xlsx</code>. A ferramenta extrairá as colunas automaticamente.</p>
+    </div>
+    <div class="card-box">
+      <h4>2. Ajuste o Tamanho da Carta</h4>
+      <p>No painel direito, escolha as dimensões em milímetros (ex: 63.5 x 88.9 mm para padrão Poker).</p>
+    </div>
+    <div class="card-box">
+      <h4>3. Desenhe as Seções no Canvas</h4>
+      <p>Selecione a área na grade central com o mouse, clique com o botão direito e escolha <strong>"Criar Seção"</strong>.</p>
+    </div>
+    <div class="card-box">
+      <h4>4. Vincule os Dados e Tipos</h4>
+      <p>Defina o tipo da coluna no painel esquerdo (Texto, Imagem, Cor ou Bordas) e associe à seção criada.</p>
+    </div>
+  </div>
+
+  <h2>4. Tipos de Colunas e Recursos Visuais</h2>
+  <ul>
+    <li><strong>Texto</strong>: Fontes personalizáveis, tamanhos em <code>pt</code>, alinhamentos (horizontal/vertical), negrito e rotação em graus.</li>
+    <li><strong>Imagem</strong>: Suporte a modos de encaixe inteligentes (<code>Smart Fit</code>, <code>Cover</code>, <code>Contain</code>), ajuste de brilho e contraste.</li>
+    <li><strong>Cor</strong>: Lê o código hexadecimal da planilha e pinta dinamicamente a área da seção para cada carta.</li>
+    <li><strong>Bordas</strong>: Desenha molduras ou detalhes geométricos na grade.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-title">💡 Dica de Impressão Duplex (Frente e Verso)</div>
+    <p class="callout-body">
+      Na aba <strong>Verso da Carta</strong> no painel direito, ative o modo <strong>Duplex Espelhado</strong>. Isso garante que a impressão frente-e-verso em papéis 250g/m² fique com as cartas perfeitamente alinhadas!
+    </p>
+  </div>
+
+  <h2>5. Atalhos Rápidos no Editor</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Ação</th>
+        <th>Atalhos / Comandos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Desfazer / Refazer</strong></td>
+        <td><code>Ctrl + Z</code> / <code>Ctrl + Y</code></td>
+      </tr>
+      <tr>
+        <td><strong>Navegação (Pan)</strong></td>
+        <td>Segurar <code>Barra de Espaço</code> + Arrastar com o mouse</td>
+      </tr>
+      <tr>
+        <td><strong>Zoom</strong></td>
+        <td>Roda do mouse (Scroll)</td>
+      </tr>
+      <tr>
+        <td><strong>Reordenar Camadas</strong></td>
+        <td>Arraste as colunas para cima/baixo no painel esquerdo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Exportando Suas Cartas</h2>
+  <ol>
+    <li>Escolha o formato desejado no cabeçalho superior:
+      <ul>
+        <li>📄 <strong>PDF</strong>: Próprio para impressão direta em folha A4 com marcas de corte.</li>
+        <li>📦 <strong>ZIP (JPG)</strong>: Imagens individuais de cada carta em alta resolução.</li>
+      </ul>
+    </li>
+    <li>Clique em <strong>"Gerar Cartas"</strong> e o download iniciará automaticamente.</li>
+  </ol>
+
+  <div class="footer-note">
+    Documento gerado automaticamente pela Fábrica de Cartas &bull; Desenvolvido para testes e prototipagem
+  </div>
+
+</body>
+</html>
