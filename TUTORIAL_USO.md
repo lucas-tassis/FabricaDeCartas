@@ -1,142 +1,186 @@
-# 🎴 Manual do Usuário - Fábrica de Cartas
+# 🎴 Manual do Usuário Detalhado - Fábrica de Cartas
 
-Bem-vindo à **Fábrica de Cartas**! Esta ferramenta foi desenvolvida para permitir a criação e geração em lote de cartas personalizadas para jogos de tabuleiro (board games), card games e protótipos rápidos, integrando dados de planilhas Excel com um editor visual interativo.
-
----
-
-## 📋 Índice
-1. [Visão Geral e Fluxo de Trabalho](#1-visão-geral-e-fluxo-de-trabalho)
-2. [Passo 1: Carregando sua Planilha Excel](#passo-1-carregando-sua-planilha-excel)
-3. [Passo 2: Configurando o Tamanho da Carta e a Grade](#passo-2-configurando-o-tamanho-da-carta-e-a-grade)
-4. [Passo 3: Criando e Redimensionando Seções](#passo-3-criando-e-redimensionando-seções)
-5. [Passo 4: Vinculando Colunas da Planilha às Seções](#passo-4-vinculando-colunas-da-planilha-às-seções)
-6. [Passo 5: Estilização e Personalização Visual](#passo-5-estilização-e-personalização-visual)
-7. [Passo 6: Configurando o Verso da Carta](#passo-6-configurando-o-verso-da-carta)
-8. [Passo 7: Salvar/Carregar Leiaute (.json)](#passo-7-salvarcarregar-leiaute-json)
-9. [Passo 8: Gerar e Exportar (PDF / ZIP)](#passo-8-gerar-e-exportar-pdf--zip)
-10. [Atalhos e Dicas Avançadas](#atalhos-e-dicas-avançadas)
+Bem-vindo ao **Guia Completo da Fábrica de Cartas**! Este manual foi elaborado para fornecer explicações aprofundadas sobre todas as funcionalidades, desde a preparação de planilhas Excel até a impressão gráfica de alta qualidade.
 
 ---
 
-## 1. Visão Geral e Fluxo de Trabalho
-
-A interface da **Fábrica de Cartas** é dividida em 3 partes principais:
-
-* ⬅️ **Painel Esquerdo (Dados & Colunas)**: Upload da planilha `.xlsx`, definição dos tipos de colunas (Texto, Imagem, Cor, Bordas) e reordenamento de camadas.
-* 🖼️ **Área Central (Editor Canvas)**: Visualização em tempo real da carta, movimentação, redimensionamento de seções e ferramentas de zoom/pan.
-* ➡️ **Painel Direito (Propriedades & Estilo)**: Configuração de dimensões da carta, tamanho da grade, fontes, cores, alinhamento, ajustes de imagem e guias de sangria.
-
----
-
-## Passo 1: Carregando sua Planilha Excel
-
-1. No painel esquerdo, clique no botão de upload de arquivo **.xlsx**.
-2. Selecione a planilha contendo os dados do seu jogo.
-   * *Exemplo de colunas*: `Nome`, `Tipo`, `Habilidade`, `Custo`, `Caminho_Imagem`, `Cor_Fundo`.
-3. A aplicação extrairá automaticamente todas as colunas da planilha e as exibirá no painel esquerdo.
+## 📑 Sumário Detalhado
+1. [Conceitos Fundamentais](#1-conceitos-fundamentais)
+2. [Estrutura da Planilha Excel (.xlsx)](#2-estrutura-da-planilha-excel-xlsx)
+3. [Entendendo a Interface Visual](#3-entendendo-a-interface-visual)
+4. [Tipos de Colunas e Como Funcionam](#4-tipos-de-colunas-e-como-funcionam)
+5. [Editor de Layout e Manipulação de Seções](#5-editor-de-layout-e-manipulação-de-seções)
+6. [Estilização Avançada (Texto e Imagem)](#6-estilização-avançada-texto-e-imagem)
+7. [Configuração do Verso da Carta e Impressão Duplex](#7-configuração-do-verso-da-carta-e-impressão-duplex)
+8. [Painel de Imagens Locais (Assets)](#8-painel-de-imagens-locais-assets)
+9. [Exemplo Prático Explicado (Passo a Passo)](#9-exemplo-prático-explicado-passo-a-passo)
+10. [Exportação, Impressão e Corte Gráfico](#10-exportação-impressão-e-corte-gráfico)
+11. [Solução de Problemas (Troubleshooting)](#11-solução-de-problemas-troubleshooting)
 
 ---
 
-## Passo 2: Configurando o Tamanho da Carta e a Grade
+## 1. Conceitos Fundamentais
 
-No painel direito, ajuste as configurações iniciais do modelo:
+A **Fábrica de Cartas** é um gerador de mídia baseado em modelos (templates). Ela combina dois elementos essenciais:
+1. **Dados (Planilha Excel)**: Onde ficam os textos, atributos, nomes de arquivo de imagem e cores específicas de cada carta.
+2. **Modelo (Layout)**: Onde você desenha visualmente *onde* e *como* cada dado será exibido na superfície da carta.
 
-1. **Largura da Carta (mm)** e **Altura da Carta (mm)**:
-   * *Padrão Poker*: 63.5 mm x 88.9 mm
-   * *Padrão Bridge*: 57 mm x 89 mm
-   * *Padrão Mini*: 44 mm x 67 mm
-2. **Tamanho da Grade (mm)**: Define a precisão do alinhamento (ex: 5mm ou 2.5mm).
-3. **Atrelar à Grade (Snap to Grid)**: Quando ativado, os elementos se alinham automaticamente aos vértices da grade.
-4. **Guias de Sangria (Bleed Guides)**: Ative para visualizar a margem de segurança para corte gráfico impresso.
+A ferramenta gera automaticamente **N cartas** a partir das **N linhas** da sua planilha.
 
 ---
 
-## Passo 3: Criando e Redimensionando Seções
+## 2. Estrutura da Planilha Excel (.xlsx)
 
-Uma **seção** é uma área retangular na carta reservada para exibir um texto, imagem ou elemento gráfico.
+Para que a aplicação leia seus dados sem erros, siga estas regras simples na construção do seu arquivo `.xlsx`:
 
-* **Criar uma Seção**:
-  * Clique e arraste na área central (Canvas) para selecionar os blocos desejados da grade.
-  * Clique com o **botão direito** sobre a seleção e escolha **"Criar Seção"**.
-* **Mover / Redimensionar**:
-  * Clique sobre uma seção para selecioná-la.
-  * Arraste a seção para movê-la ou use as alças nos cantos para alterar seu tamanho.
-* **Remover Seção**:
-  * Clique com o botão direito sobre a seção e selecione **"Remover Seção"**.
+### Regras do Arquivo:
+* **Linha 1 (Cabeçalhos)**: Deve conter os nomes das colunas (ex: `Nome`, `Ataque`, `Defesa`, `Descricao`, `Foto`, `CorFundo`).
+* **Linhas 2 em diante (Cartas)**: Cada linha representa uma carta individual.
+* **Formatação de Dados por Coluna**:
+  * **Texto**: Digite livremente qualquer texto ou número (ex: *"Mago Negro"*, *"3"*, *"Causa 5 de dano em área"*).
+  * **Caminhos de Imagem**: Aceita:
+    * URLs públicas na web (`https://site.com/imagens/dragao.jpg`).
+    * Nomes de arquivos previamente carregados na aba de Assets (`dragao.jpg`).
+  * **Cores**: Aceita códigos Hexadecimais (`#FF0000` para vermelho, `#0088FF` para azul) ou nomes de cores padrão CSS (`red`, `blue`, `black`, `gold`).
 
----
-
-## Passo 4: Vinculando Colunas da Planilha às Seções
-
-1. No painel esquerdo, localize a coluna desejada (ex: `Nome`).
-2. No menu suspenso ao lado da coluna, selecione o **Tipo de Dado**:
-   * **Texto**: Renderiza o conteúdo textual da célula.
-   * **Imagem**: Carrega a imagem a partir de uma URL ou caminho de arquivo local.
-   * **Cor**: Aplica a cor hexadecimal especificada na célula como fundo da seção.
-   * **Bordas**: Desenha molduras ou detalhes geométricos.
-3. Clique no seletor de seção para vincular essa coluna a uma das seções criadas no Canvas.
+#### Exemplo de Tabela Excel:
+| Nome | Tipo | Ataque | Defesa | Foto | CorFundo |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| Dragão de Fogo | Monstro | 8 | 5 | dragao.jpg | #FF4444 |
+| Escudo Real | Item | 0 | 4 | escudo.png | #4488FF |
+| Poção Solar | Magia | 0 | 0 | pocao.jpg | #FFCC00 |
 
 ---
 
-## Passo 5: Estilização e Personalização Visual
+## 3. Entendendo a Interface Visual
 
-Ao clicar em uma seção no Canvas ou no painel esquerdo, o painel direito exibirá todas as opções de personalização:
+A tela é organizada em 3 grandes zonas funcionais:
 
-### Para Seções de Texto:
-* **Família da Fonte**: Escolha entre fontes do sistema (Helvetica, Arial, Times New Roman, Courier, etc.).
-* **Tamanho da Fonte (pt)**: Ajuste o tamanho do texto.
-* **Estilo**: Ative **Negrito**, altere a **Cor do Texto** e a **Cor de Fundo da Seção**.
-* **Alinhamento**:
-  * *Horizontal*: Esquerda, Centro, Direita.
-  * *Vertical*: Topo, Centro, Base.
-* **Rotação**: Gire o texto em graus (0°, 90°, 180°, 270°).
-
-### Para Seções de Imagem:
-* **Ajuste de Imagem (Fit)**:
-  * **Smart**: Ajusta proporcionalmente preenchendo a área sem distorcer.
-  * **Cover**: Preenche 100% da área (pode cortar bordas).
-  * **Contain**: Exibe a imagem inteira sem cortes (pode deixar espaços).
-* **Filtros**: Ajuste de **Brilho** e **Contraste**.
+```
++------------------+----------------------------------+------------------+
+| PAINEL ESQUERDO  |          ÁREA CENTRAL            |  PAINEL DIREITO  |
+|                  |          (CANVAS EDITOR)         |                  |
+| 📂 Upload Excel  |                                  | 📏 Tamanho Carta |
+| 📋 Lista Colunas |       [ Visualização da ]        | 🔳 Tamanho Grade |
+| 🔀 Tipo Dado     |       [  Carta com Zoom ]        | 🔤 Fontes/Cores  |
+| 🧱 Camadas       |                                  | 🖼️ Fit de Imagem |
+|                  |  🖼️ Gerenciador de Assets        | 🃏 Verso Carta   |
++------------------+----------------------------------+------------------+
+```
 
 ---
 
-## Passo 6: Configurando o Verso da Carta
+## 4. Tipos de Colunas e Como Funcionam
 
-Você pode configurar um verso padronizado para todas as cartas do conjunto:
-1. No painel direito, acesse a seção **Verso da Carta**.
-2. Escolha o tipo de verso:
-   * **Cor Sólida**: Define uma cor padrão para as costas de todas as cartas.
-   * **Imagem Única**: Selecione uma imagem padrão (ex: `verso_padrao.png`) para o verso.
+Ao carregar a planilha, você deve atribuir um **Tipo** para cada coluna no painel esquerdo:
 
----
+### 1. `Texto` (Padrão)
+* Escreve o texto da célula na posição da seção.
+* Ajusta automaticamente a quebra de linha se o texto for longo.
+* Permite controle completo de fonte, cor, alinhamento e rotação.
 
-## Passo 7: Salvar/Carregar Leiaute (.json)
+### 2. `Imagem`
+* Carrega e desenha a imagem indicada na célula.
+* Possui opções avançadas de redimensionamento (*Smart Fit*, *Cover*, *Contain*).
+* Suporta conversão de Espaço de Cor para **CMYK** (ideal para impressoras gráficas).
 
-Você pode salvar todo o seu trabalho de design para reaproveitar no futuro:
+### 3. `Cor`
+* Lê o código hexadecimal da célula e preenche o fundo da seção com aquela cor.
+* Útil para dinamicamente alterar a cor de molduras, barras de atributos ou fundos de acordo com a classe/elemento da carta.
 
-* **Salvar Leiaute**: Clique no botão **"Salvar Leiaute"** no cabeçalho superior. Um arquivo `.json` com todas as seções, posições e fontes será baixado.
-* **Carregar Leiaute**: Clique em **"Carregar Leiaute"** e selecione o arquivo `.json` salvo previamente.
-
----
-
-## Passo 8: Gerar e Exportar (PDF / ZIP)
-
-Quando o modelo estiver pronto:
-
-1. No cabeçalho superior, selecione o **Formato de Exportação**:
-   * 📄 **PDF**: Gera um documento pronto para impressão em páginas A4/Carta com marcas de corte e múltiplas cartas por página.
-   * 📦 **ZIP (JPG)**: Compacta e baixa cada carta gerada como uma imagem `.jpg` individual em alta resolução.
-2. Clique no botão **"Gerar Cartas"**.
-3. Aguarde o processamento. O download do arquivo final iniciará automaticamente!
+### 4. `Bordas`
+* Desenha padrões geométricos de borda ou molduras personalizadas com base nos quadrados selecionados na grade.
 
 ---
 
-## ⌨️ Atalhos e Dicas Avançadas
+## 5. Editor de Layout e Manipulação de Seções
 
-| Ação | Atalho / Comando |
-| :--- | :--- |
-| **Desfazer** | `Ctrl + Z` |
-| **Refazer** | `Ctrl + Y` ou `Ctrl + Shift + Z` |
-| **Zoom no Canvas** | Roda do mouse (`Scroll`) |
-| **Pan (Mover Canvas)** | Segurar `Barra de Espaço` + Arrastar com o mouse |
-| **Reordenar Camadas** | Arraste as colunas no painel esquerdo para cima/baixo para definir a sobreposição visual |
+### Como criar uma seção:
+1. No Canvas central, clique e segure com o botão esquerdo para selecionar a área desejada da grade.
+2. Clique com o **botão direito** sobre os blocos destacados.
+3. Clique em **"Criar Seção"**.
+
+### Camadas e Sobreposição (Z-Index / Render Order):
+* As seções são renderizadas na ordem em que aparecem no **Painel Esquerdo**.
+* **Reordenar Camadas**: Clique e arraste as colunas para cima ou para baixo no painel esquerdo.
+  * *Colunas no topo*: Ficam ao fundo (Background).
+  * *Colunas na base*: Ficam na frente (Foreground/Sobreposição).
+
+---
+
+## 6. Estilização Avançada (Texto e Imagem)
+
+Quando uma seção está selecionada, o **Painel Direito** expõe os seguintes ajustes:
+
+### 🔤 Ajustes de Texto:
+* **Fonte**: Escolha entre fontes vetoriais limpas (`Helvetica`, `Arial`, `Times New Roman`, `Courier`).
+* **Tamanho**: Ajuste o tamanho em pontos (`pt`).
+* **Negrito**: Ative o botão **B** para destacar títulos e valores.
+* **Alinhamentos**:
+  * *Horizontal*: Esquerda | Centro | Direita.
+  * *Vertical*: Topo | Centro | Base.
+* **Rotação**: Rotação em 90°, 180° ou 270° (excelente para cartas com textos laterais ou invertidos).
+
+### 🖼️ Ajustes de Imagem:
+* **Modo de Encaixe (Fit)**:
+  * `Smart`: Encaixe inteligente que preserva a proporção sem distorção.
+  * `Cover`: Preenche toda a seção (pode recortar as bordas da imagem).
+  * `Contain`: Exibe 100% da imagem (pode gerar margens transparentes).
+* **Filtros Gráficos**:
+  * **Brilho (%)**: De 0% (escuro) a 200% (super exposto).
+  * **Contraste (%)**: Ajuste para destacar detalhes de ilustrações.
+* **Espaço de Cor**: Escolha entre **RGB** (Telas/Web) ou **CMYK** (Impressão Profissional).
+
+---
+
+## 7. Configuração do Verso da Carta e Impressão Duplex
+
+No painel direito, expanda a aba **Verso da Carta**:
+
+1. **Ativar Verso**: Selecione `Cor Sólida` ou `Imagem Única`.
+2. **Duplex / Alinhamento de Impressão**:
+   * **Frente e Verso Separados**: Gera as frentes primeiro e os versos nas páginas seguintes.
+   * **Duplex Espelhado (Frente e Verso na Mesma Folha)**: Ao imprimir em folha dupla face ou ao virar a folha na impressora, a coluna da direita do verso alinha-se perfeitamente com a coluna da esquerda da frente!
+
+---
+
+## 8. Painel de Imagens Locais (Assets)
+
+Abaixo do Canvas central fica a barra de **Assets de Imagem**:
+* Você pode arrastar imagens do seu computador para esta barra.
+* Ao colocar o nome do arquivo (ex: `icone_espada.png`) na sua planilha Excel, a Fábrica de Cartas buscará a imagem diretamente desses assets carregados, sem precisar hospedá-la na internet!
+
+---
+
+## 9. Exemplo Prático Explicado (Passo a Passo)
+
+Vamos criar um jogo de cartas de batalhas:
+
+1. **Prepare a Planilha**: Crie `cartas.xlsx` com as colunas `Nome`, `Ataque`, `Ilustracao` e `CorTipo`.
+2. **Faça o Upload**: Importe o arquivo na Fábrica de Cartas.
+3. **Crie as Seções**:
+   - Seção 1 (Fundo): Cubra a carta inteira -> Vincule com `CorTipo` (Tipo: Cor).
+   - Seção 2 (Ilustração): Selecione o centro da carta -> Vincule com `Ilustracao` (Tipo: Imagem, Fit: Cover).
+   - Seção 3 (Título): Selecione o topo da carta -> Vincule com `Nome` (Tipo: Texto, Fonte: Helvetica, Bold, Tam: 16pt, Alinhar: Centro).
+   - Seção 4 (Ataque): Selecione o canto inferior -> Vincule com `Ataque` (Tipo: Texto, Tam: 20pt, Cor: Vermelho).
+4. **Exporte**: Escolha **PDF** e clique em **Gerar Cartas**.
+
+---
+
+## 10. Exportação, Impressão e Corte Gráfico
+
+### Dicas para Impressão Perfeita:
+* **Sangria (Bleed Guides)**: Ative as guias de sangria no painel direito. Certifique-se de que as imagens de fundo ultrapassem ligeiramente a linha vermelha de corte para que não apareçam fiapos brancos ao cortar a carta com guilhotina ou tesoura.
+* **Papel Recomendado**: Para protótipos de cartas, utilize papéis de gramatura alta (ex: **Offset ou Couché 250g/m² a 300g/m²**).
+* **Impressão sem Escala**: Ao abrir o PDF gerado no seu leitor de PDF (ex: Adobe Acrobat), certifique-se de selecionar a opção **"Tamanho Real" (100%)** nas configurações de impressão para manter os tamanhos em milímetros exatos.
+
+---
+
+## 11. Solução de Problemas (Troubleshooting)
+
+| Problema | Causa Provável | Solução |
+| :--- | :--- | :--- |
+| **A imagem não aparece na carta** | Nome do arquivo ou URL incorreta na planilha | Verifique se o nome do arquivo no Excel bate exatamente com o nome da imagem na aba de Assets ou se a URL é válida. |
+| **O texto está cortando** | Seção muito pequena ou fonte muito grande | Redimensione a seção puxando as alças no Canvas ou reduza o tamanho da fonte no painel direito. |
+| **Elemento cobrindo o outro** | Ordem das camadas incorreta | No painel esquerdo, arraste a coluna do elemento que deve ficar por cima para o final da lista. |
+| **O PDF impresso ficou menor/maior** | Escala da impressora ajustada para "Ajustar à página" | Na janela de impressão do seu computador, mude de "Ajustar" para "Tamanho Real (100%)". |
