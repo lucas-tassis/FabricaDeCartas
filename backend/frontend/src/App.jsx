@@ -53,6 +53,7 @@ function App() {
     columns: [],
     cardBorderColor: '#000000',
     cardBorderThickness: 0.3,
+    rotate90ForPrint: false,
   });
   const [gridSize, setGridSize] = useState(DEFAULT_GRID_SIZE_MM);
   const [showBleedGuides, setShowBleedGuides] = useState(false);
@@ -185,6 +186,7 @@ function App() {
       cardBackValue: template.cardBackValue || '',
       cardBackDirection: template.cardBackDirection || 'separate',
       cardBackFit: template.cardBackFit || 'cover',
+      rotate90ForPrint: !!template.rotate90ForPrint,
     };
 
     const ext = exportFormat === 'pdf' ? '.pdf' : '.zip';

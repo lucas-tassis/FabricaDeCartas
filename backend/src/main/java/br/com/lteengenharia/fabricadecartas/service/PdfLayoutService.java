@@ -31,9 +31,13 @@ public class PdfLayoutService {
             double pageHeight = a4.getHeight();
             double cardWidth = template.getCardWidth();
             double cardHeight = template.getCardHeight();
+            boolean rotate90 = template.isRotate90ForPrint();
 
-            int cardsPerRow = Math.max(1, (int) ((pageWidth - 2 * PAGE_MARGIN_PT + CARD_SPACING_PT) / (cardWidth + CARD_SPACING_PT)));
-            int cardsPerCol = Math.max(1, (int) ((pageHeight - 2 * PAGE_MARGIN_PT + CARD_SPACING_PT) / (cardHeight + CARD_SPACING_PT)));
+            double effectiveWidth = rotate90 ? cardHeight : cardWidth;
+            double effectiveHeight = rotate90 ? cardWidth : cardHeight;
+
+            int cardsPerRow = Math.max(1, (int) ((pageWidth - 2 * PAGE_MARGIN_PT + CARD_SPACING_PT) / (effectiveWidth + CARD_SPACING_PT)));
+            int cardsPerCol = Math.max(1, (int) ((pageHeight - 2 * PAGE_MARGIN_PT + CARD_SPACING_PT) / (effectiveHeight + CARD_SPACING_PT)));
             int cardsPerPage = cardsPerRow * cardsPerCol;
 
             boolean hasBack = !"none".equalsIgnoreCase(template.getCardBackType());
@@ -49,9 +53,16 @@ public class PdfLayoutService {
                     for (int i = 0; i < cardsPerPage && currentCard < data.size(); i++) {
                         int row = i / cardsPerRow;
                         int col = i % cardsPerRow;
-                        double startX = PAGE_MARGIN_PT + col * (cardWidth + CARD_SPACING_PT);
-                        double startY = pageHeight - PAGE_MARGIN_PT - (row + 1) * cardHeight - row * CARD_SPACING_PT;
-                        cardRenderService.drawCard(document, contentStream, data.get(currentCard), template, startX, startY);
+                        double startX = PAGE_MARGIN_PT + col * (effectiveWidth + CARD_SPACING_PT);
+                        double startY = pageHeight - PAGE_MARGIN_PT - (row + 1) * effectiveHeight - row * CARD_SPACING_PT;
+                        if (rotate90) {
+                            contentStream.saveGraphicsState();
+                            contentStream.transform(new org.apache.pdfbox.util.Matrix(0, -1, 1, 0, (float) startX, (float) (startY + cardWidth)));
+                            cardRenderService.drawCard(document, contentStream, data.get(currentCard), template, 0, 0);
+                            contentStream.restoreGraphicsState();
+                        } else {
+                            cardRenderService.drawCard(document, contentStream, data.get(currentCard), template, startX, startY);
+                        }
                         currentCard++;
                     }
                 }
@@ -87,6 +98,10 @@ public class PdfLayoutService {
 
         double cardWidth = template.getCardWidth();
         double cardHeight = template.getCardHeight();
+        boolean rotate90 = template.isRotate90ForPrint();
+
+        double effectiveWidth = rotate90 ? cardHeight : cardWidth;
+        double effectiveHeight = rotate90 ? cardWidth : cardHeight;
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, backPage)) {
             int cardsPerPage = cardsPerRow * cardsPerCol;
@@ -100,12 +115,19 @@ public class PdfLayoutService {
                 // Mirror the column horizontally for correct print alignment
                 int col = cardsPerRow - 1 - (i % cardsPerRow);
 
-                double startX = PAGE_MARGIN_PT + col * (cardWidth + CARD_SPACING_PT);
-                double startY = pageHeight - PAGE_MARGIN_PT - (row + 1) * cardHeight - row * CARD_SPACING_PT;
+                double startX = PAGE_MARGIN_PT + col * (effectiveWidth + CARD_SPACING_PT);
+                double startY = pageHeight - PAGE_MARGIN_PT - (row + 1) * effectiveHeight - row * CARD_SPACING_PT;
 
                 String backImageName = resolveBackImageName(data.get(cardIdx), template);
                 if (backImageName != null && !backImageName.isEmpty()) {
-                    cardRenderService.drawCardBack(document, contentStream, template, backImageName, startX, startY);
+                    if (rotate90) {
+                        contentStream.saveGraphicsState();
+                        contentStream.transform(new org.apache.pdfbox.util.Matrix(0, -1, 1, 0, (float) startX, (float) (startY + cardWidth)));
+                        cardRenderService.drawCardBack(document, contentStream, template, backImageName, 0, 0);
+                        contentStream.restoreGraphicsState();
+                    } else {
+                        cardRenderService.drawCardBack(document, contentStream, template, backImageName, startX, startY);
+                    }
                 }
             }
         }

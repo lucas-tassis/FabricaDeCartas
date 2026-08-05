@@ -92,6 +92,7 @@ const resources = {
       "select_column_hint": "Selecione uma coluna...",
       "show_bleed_guides": "Exibir Guias de Sangria (3mm)",
       "snap_to_grid": "Ajustar ao Grid (Snap)",
+      "rotate_90_for_print": "Girar 90° no PDF (Otimizar Impressão)",
       "shutdown": "Desligar App",
       "shutdown_message": "O aplicativo foi desligado com sucesso. Você já pode fechar esta aba do navegador."
     }
@@ -186,6 +187,7 @@ const resources = {
       "select_column_hint": "Select a column...",
       "show_bleed_guides": "Show Bleed Guides (3mm)",
       "snap_to_grid": "Snap to Grid",
+      "rotate_90_for_print": "Rotate 90° for PDF Print",
       "shutdown": "Shutdown App",
       "shutdown_message": "The application has been shut down successfully. You can now close this browser tab."
     }

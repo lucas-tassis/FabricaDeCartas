@@ -112,6 +112,18 @@ function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSect
       </div>
 
       <div className="control-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={template.rotate90ForPrint || false}
+            onChange={(e) => setTemplate({ ...template, rotate90ForPrint: e.target.checked })}
+            style={{ width: 'auto', marginRight: '0.5rem' }}
+          />
+          {t('rotate_90_for_print')}
+        </label>
+      </div>
+
+      <div className="control-group">
         <label>{t('card_border_thickness')}</label>
         <input type="text" value={template.cardBorderThickness ?? 0.3}
           onChange={(e) => setTemplate({ ...template, cardBorderThickness: e.target.value })} />

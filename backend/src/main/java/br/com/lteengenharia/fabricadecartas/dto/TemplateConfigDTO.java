@@ -14,4 +14,5 @@ public class TemplateConfigDTO {
     private String cardBackValue = "";         // default image name or column name
     private String cardBackDirection = "separate"; // "interleaved" or "separate"
     private String cardBackFit = "cover";      // "cover", "contain", "fill", "none", "smart"
+    private boolean rotate90ForPrint = false;  // rotate card 90 degrees when laying out on PDF
 }
