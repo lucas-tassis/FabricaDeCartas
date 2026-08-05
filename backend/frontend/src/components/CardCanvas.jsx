@@ -173,8 +173,13 @@ function CardCanvas({
             }
 
             let bgFillColor = section.backgroundColor || undefined;
-            if (isPreviewActive && colType === 'bordas' && rawVal && rawVal.trim().startsWith('#')) {
-              bgFillColor = rawVal.trim();
+            if (colType === 'bordas') {
+              bgFillColor = section.color || '#3b82f6';
+              if (isPreviewActive && rawVal && rawVal.trim()) {
+                let c = rawVal.trim();
+                if (/^[0-9a-fA-F]{3,6}$/.test(c)) c = '#' + c;
+                bgFillColor = c;
+              }
             }
 
             return (
@@ -231,8 +236,8 @@ function CardCanvas({
                     overflow: 'hidden',
                   }}
                 >
-                  {isPreviewActive ? (
-                    colType === 'image' && imageUrl ? (
+                  {colType === 'image' ? (
+                    imageUrl ? (
                       <img
                         src={imageUrl}
                         alt={linkedCol}
@@ -243,15 +248,16 @@ function CardCanvas({
                           filter: `brightness(${section.brightness ?? 100}%) contrast(${section.contrast ?? 100}%)`,
                           pointerEvents: 'none',
                         }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
                       />
                     ) : (
-                      <span>{rawVal || `[${linkedCol}]`}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', opacity: 0.85, fontSize: '0.85em', fontWeight: 600 }}>
+                        🖼️ <span>{isPreviewActive ? (rawVal || linkedCol) : linkedCol ? `[${linkedCol}]` : section.name}</span>
+                      </div>
                     )
+                  ) : colType === 'bordas' ? (
+                    <div style={{ width: '100%', height: '100%', backgroundColor: bgFillColor }} />
                   ) : (
-                    linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, '')
+                    <span>{isPreviewActive ? (rawVal || `[${linkedCol}]`) : (linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, ''))}</span>
                   )}
                 </div>
 

@@ -72,9 +72,39 @@ public class ImageStorageService {
         File exact = STORAGE_DIR.resolve(name).toFile();
         if (exact.exists()) return Optional.of(exact);
 
-        for (String ext : List.of(".png", ".jpg", ".jpeg", ".webp", ".gif")) {
+        for (String ext : List.of(".png", ".PNG", ".jpg", ".JPG", ".jpeg", ".JPEG", ".webp", ".WEBP", ".gif", ".GIF", ".svg", ".SVG")) {
             File candidate = STORAGE_DIR.resolve(name + ext).toFile();
             if (candidate.exists()) return Optional.of(candidate);
+        }
+
+        File[] storedFiles = STORAGE_DIR.toFile().listFiles();
+        if (storedFiles != null) {
+            String cleanName = name.trim().toLowerCase();
+            for (File f : storedFiles) {
+                if (f.isFile() && f.getName().equalsIgnoreCase(name.trim())) {
+                    return Optional.of(f);
+                }
+            }
+            for (File f : storedFiles) {
+                if (f.isFile()) {
+                    String fname = f.getName();
+                    int dot = fname.lastIndexOf('.');
+                    String stem = (dot > 0) ? fname.substring(0, dot) : fname;
+                    if (stem.equalsIgnoreCase(cleanName)) {
+                        return Optional.of(f);
+                    }
+                }
+            }
+            for (File f : storedFiles) {
+                if (f.isFile()) {
+                    String fname = f.getName().toLowerCase();
+                    int dot = fname.lastIndexOf('.');
+                    String stem = (dot > 0) ? fname.substring(0, dot) : fname;
+                    if (fname.contains(cleanName) || cleanName.contains(stem)) {
+                        return Optional.of(f);
+                    }
+                }
+            }
         }
 
         log.warn("Image not found in storage for name: {}", name);
