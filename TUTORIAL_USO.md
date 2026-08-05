@@ -131,6 +131,12 @@ Quando uma seção está selecionada, o **Painel Direito** expõe os seguintes a
   * **Contraste (%)**: Ajuste para destacar detalhes de ilustrações.
 * **Espaço de Cor**: Escolha entre **RGB** (Telas/Web) ou **CMYK** (Impressão Profissional).
 
+### 🔄 Rotação de 90° na Impressão (Otimização de Espaço)
+Se você criar um design de carta na **horizontal** (ex: *88.9 mm de largura por 63.5 mm de altura*), é possível otimizar a distribuição no papel A4 ativando a rotação de 90°:
+1. No **Painel Direito** (Propriedades), marque a caixa de seleção **"Girar 90° no PDF (Otimizar Impressão)"**.
+2. Ao gerar o PDF, o motor de layout girará cada carta em 90° automaticamente antes de distribuí-las na folha.
+3. Isso recalcula o encaixe para caber mais cartas por página (ex: de 8 cartas para **9 cartas por folha A4**).
+
 ---
 
 ## 7. Configuração do Verso da Carta e Impressão Duplex
