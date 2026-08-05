@@ -101,6 +101,7 @@ function App() {
 
   const [firstRow, setFirstRow] = useState(null);
   const [totalRows, setTotalRows] = useState(0);
+  const [showPreviewCard1, setShowPreviewCard1] = useState(true);
 
   const handleFileUpload = async (e) => {
     const uploadedFile = e.target.files[0];
@@ -453,6 +454,8 @@ function App() {
             firstRow={firstRow}
             columnTypes={columnTypes}
             totalRows={totalRows}
+            showPreviewCard1={showPreviewCard1}
+            setShowPreviewCard1={setShowPreviewCard1}
           />
           <ImageAssets />
         </div>
@@ -472,6 +475,9 @@ function App() {
           setShowBleedGuides={setShowBleedGuides}
           snapToGrid={snapToGrid}
           setSnapToGrid={setSnapToGrid}
+          showPreviewCard1={showPreviewCard1}
+          setShowPreviewCard1={setShowPreviewCard1}
+          firstRow={firstRow}
         />
       </main>
 

@@ -36,13 +36,14 @@ function CardCanvas({
   firstRow,
   columnTypes,
   totalRows,
+  showPreviewCard1,
+  setShowPreviewCard1,
 }) {
   const canvasWidthPx = safeParse(template.cardWidth, 63.5) * MM_TO_PX;
   const canvasHeightPx = safeParse(template.cardHeight, 88) * MM_TO_PX;
   const gridPx = safeParse(gridSize, 0.5) * MM_TO_PX;
 
   const [gridPos, setGridPos] = useState(null);
-  const [showPreviewCard1, setShowPreviewCard1] = useState(true);
   const containerRef = useRef(null);
 
   useEffect(() => {

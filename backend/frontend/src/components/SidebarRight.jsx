@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../api/client';
+import { safeParse } from '../utils';
 
 const PRESET_SIZES = [
   { name: 'Mini USA', width: 41, height: 63 },
@@ -135,6 +136,60 @@ function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSect
             title={t('height')} />
         </div>
       </div>
+
+      <div className="control-group">
+        <label>{t('orientation')}</label>
+        <div className="segmented-control">
+          <button
+            type="button"
+            className={`segmented-btn${safeParse(template.cardWidth, 63.5) <= safeParse(template.cardHeight, 88) ? ' segmented-btn--active' : ''}`}
+            onClick={() => {
+              const w = safeParse(template.cardWidth, 63.5);
+              const h = safeParse(template.cardHeight, 88);
+              if (w > h) {
+                setTemplate({ ...template, cardWidth: h, cardHeight: w });
+              }
+            }}
+          >
+            📱 {t('portrait')}
+          </button>
+          <button
+            type="button"
+            className={`segmented-btn${safeParse(template.cardWidth, 63.5) > safeParse(template.cardHeight, 88) ? ' segmented-btn--active' : ''}`}
+            onClick={() => {
+              const w = safeParse(template.cardWidth, 63.5);
+              const h = safeParse(template.cardHeight, 88);
+              if (w < h) {
+                setTemplate({ ...template, cardWidth: h, cardHeight: w });
+              }
+            }}
+          >
+            🖼️ {t('landscape')}
+          </button>
+        </div>
+      </div>
+
+      {firstRow && (
+        <div className="control-group">
+          <label>{t('view_mode')}</label>
+          <div className="segmented-control">
+            <button
+              type="button"
+              className={`segmented-btn${!showPreviewCard1 ? ' segmented-btn--active' : ''}`}
+              onClick={() => setShowPreviewCard1(false)}
+            >
+              📝 {t('view_mode_structure')}
+            </button>
+            <button
+              type="button"
+              className={`segmented-btn${showPreviewCard1 ? ' segmented-btn--active' : ''}`}
+              onClick={() => setShowPreviewCard1(true)}
+            >
+              👁️ {t('view_mode_preview')}
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="control-group">
         <label>{t('grid_size')}</label>
