@@ -99,15 +99,21 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [undo, redo]);
 
+  const [firstRow, setFirstRow] = useState(null);
+  const [totalRows, setTotalRows] = useState(0);
+
   const handleFileUpload = async (e) => {
     const uploadedFile = e.target.files[0];
     if (!uploadedFile) return;
     setFile(uploadedFile);
     try {
-      const data = await api.extractColumns(uploadedFile);
-      setColumns(data);
+      const res = await api.previewData(uploadedFile);
+      const cols = res.columns || [];
+      setColumns(cols);
+      setFirstRow(res.firstRow || null);
+      setTotalRows(res.totalRows || 0);
       const initialTypes = {};
-      data.forEach(col => { initialTypes[col] = 'text'; });
+      cols.forEach(col => { initialTypes[col] = 'text'; });
       setColumnTypes(initialTypes);
     } catch (err) {
       setLastError(err.serverDetail || err.message || String(err));
@@ -444,6 +450,9 @@ function App() {
             onSectionDragStart={handleSectionDragStart}
             isDragging={isDragging}
             showBleedGuides={showBleedGuides}
+            firstRow={firstRow}
+            columnTypes={columnTypes}
+            totalRows={totalRows}
           />
           <ImageAssets />
         </div>

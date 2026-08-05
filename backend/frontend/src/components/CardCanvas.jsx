@@ -33,12 +33,16 @@ function CardCanvas({
   onSectionDragStart,
   isDragging,
   showBleedGuides,
+  firstRow,
+  columnTypes,
+  totalRows,
 }) {
   const canvasWidthPx = safeParse(template.cardWidth, 63.5) * MM_TO_PX;
   const canvasHeightPx = safeParse(template.cardHeight, 88) * MM_TO_PX;
   const gridPx = safeParse(gridSize, 0.5) * MM_TO_PX;
 
   const [gridPos, setGridPos] = useState(null);
+  const [showPreviewCard1, setShowPreviewCard1] = useState(true);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -73,6 +77,22 @@ function CardCanvas({
       onMouseDown={onStartPan}
       style={{ cursor: isDragging ? 'grabbing' : isPanning ? 'grabbing' : 'default' }}
     >
+      {firstRow && (
+        <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 300, display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            type="button"
+            className={`btn ${showPreviewCard1 ? 'btn-primary' : 'btn-outline'}`}
+            style={{ fontSize: '0.75rem', padding: '0.3rem 0.7rem' }}
+            onClick={(e) => { e.stopPropagation(); setShowPreviewCard1(!showPreviewCard1); }}
+          >
+            {showPreviewCard1 ? '👁️ Pré-visualizar (Carta 1)' : '📝 Modo Estrutura [Colunas]'}
+          </button>
+          <span style={{ fontSize: '0.75rem', color: '#94a3b8', background: 'rgba(15, 23, 42, 0.7)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+            Total: {totalRows} carta{totalRows !== 1 ? 's' : ''}
+          </span>
+        </div>
+      )}
+
       <div style={{ position: 'relative' }}>
         <div
           className="card-canvas"
@@ -137,6 +157,25 @@ function CardCanvas({
           {sections.map((section) => {
             const bounds = getSectionBounds(section, gridPx, canvasWidthPx, canvasHeightPx);
             const isSelected = activeSectionId === section.id;
+            const linkedCol = section.linkedColumn;
+            const colType = linkedCol ? (columnTypes?.[linkedCol] || 'text') : 'text';
+            const rawVal = (firstRow && linkedCol) ? (firstRow[linkedCol] ?? '') : '';
+            const isPreviewActive = showPreviewCard1 && firstRow && linkedCol;
+
+            let imageUrl = null;
+            if (isPreviewActive && colType === 'image' && rawVal) {
+              if (rawVal.startsWith('http://') || rawVal.startsWith('https://') || rawVal.startsWith('data:')) {
+                imageUrl = rawVal;
+              } else {
+                imageUrl = `/api/images/view/${encodeURIComponent(rawVal)}`;
+              }
+            }
+
+            let bgFillColor = section.backgroundColor || undefined;
+            if (isPreviewActive && colType === 'bordas' && rawVal && rawVal.trim().startsWith('#')) {
+              bgFillColor = rawVal.trim();
+            }
+
             return (
               <Fragment key={section.id}>
                 {section.squares.map(key => {
@@ -157,10 +196,7 @@ function CardCanvas({
                   className={`draggable-item${isSelected ? ' selected' : ''}`}
                   onMouseDown={(e) => {
                     if (e.button !== 0) return;
-                    if (e.shiftKey || e.ctrlKey || e.metaKey) {
-                      // Let event bubble to canvas to select squares
-                      return;
-                    }
+                    if (e.shiftKey || e.ctrlKey || e.metaKey) return;
                     e.stopPropagation();
                     e.preventDefault();
                     onSectionClick(section.id);
@@ -173,25 +209,49 @@ function CardCanvas({
                     top: `${bounds.minY}px`,
                     width: `${bounds.width}px`,
                     height: `${bounds.height}px`,
-                    justifyContent: section.linkedColumn
+                    justifyContent: linkedCol
                       ? (section.textAlign === 'center' ? 'center' : section.textAlign === 'right' ? 'flex-end' : 'flex-start')
                       : 'center',
-                    alignItems: section.linkedColumn
+                    alignItems: linkedCol
                       ? (section.vAlign === 'top' ? 'flex-start' : section.vAlign === 'bottom' ? 'flex-end' : 'center')
                       : 'center',
                     fontSize: `${safeParse(section.fontSize, 12) * (MM_TO_PX / MM_TO_PT)}px`,
-                    color: section.fontColor,
+                    fontFamily: section.fontFamily || 'Helvetica, sans-serif',
+                    color: section.fontColor || '#000000',
                     fontWeight: section.bold ? 'bold' : 'normal',
                     textAlign: section.textAlign,
+                    backgroundColor: bgFillColor,
                     border: safeParse(section.borderThickness, 0) > 0
-                      ? `${safeParse(section.borderThickness, 0) * (MM_TO_PX / MM_TO_PT)}px solid ${section.fontColor}`
+                      ? `${safeParse(section.borderThickness, 0) * (MM_TO_PX / MM_TO_PT)}px solid ${section.fontColor || '#000000'}`
                       : 'none',
                     outline: isSelected ? '2px dashed var(--primary)' : 'none',
                     transform: safeParse(section.rotation, 0) ? `rotate(${safeParse(section.rotation, 0)}deg)` : undefined,
                     transformOrigin: 'center center',
+                    overflow: 'hidden',
                   }}
                 >
-                  {section.linkedColumn ? `[${section.linkedColumn}]` : section.name.replace(/\D+/g, '')}
+                  {isPreviewActive ? (
+                    colType === 'image' && imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={linkedCol}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: section.imageFit === 'contain' ? 'contain' : section.imageFit === 'cover' ? 'cover' : section.imageFit === 'fill' ? 'fill' : 'scale-down',
+                          filter: `brightness(${section.brightness ?? 100}%) contrast(${section.contrast ?? 100}%)`,
+                          pointerEvents: 'none',
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <span>{rawVal || `[${linkedCol}]`}</span>
+                    )
+                  ) : (
+                    linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, '')
+                  )}
                 </div>
 
                 {isSelected && HANDLE_DIRS.map(dir => {

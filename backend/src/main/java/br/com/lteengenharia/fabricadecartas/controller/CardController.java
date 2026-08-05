@@ -53,6 +53,23 @@ public class CardController {
         }
     }
 
+    @PostMapping("/preview-data")
+    public ResponseEntity<java.util.Map<String, Object>> previewData(@RequestParam("file") MultipartFile file) {
+        try {
+            List<String> columns = excelService.extractColumns(file);
+            List<Map<String, String>> rows = excelService.extractData(file);
+            Map<String, String> firstRow = rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
+            Map<String, Object> result = new java.util.HashMap<>();
+            result.put("columns", columns);
+            result.put("firstRow", firstRow);
+            result.put("totalRows", rows.size());
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("Failed to extract preview data from file: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping("/generate")
     public ResponseEntity<byte[]> generateCards(
             @RequestParam("file") MultipartFile file,

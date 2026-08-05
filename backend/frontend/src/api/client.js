@@ -89,6 +89,17 @@ export const api = {
     return response.json();
   },
 
+  async previewData(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await safeFetch(`${API_BASE_URL}/api/cards/preview-data`, {
+      method: 'POST',
+      body: formData,
+      _context: `Arquivo: ${file.name}`,
+    });
+    return response.json(); // { columns: string[], firstRow: Record<string, string>, totalRows: number }
+  },
+
   async generateCards(file, template, format) {
     const formData = new FormData();
     formData.append('file', file);

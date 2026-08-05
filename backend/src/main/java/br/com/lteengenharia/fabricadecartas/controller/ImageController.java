@@ -42,4 +42,23 @@ public class ImageController {
         imageStorageService.clearAll();
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/view/{filename:.+}")
+    public ResponseEntity<org.springframework.core.io.Resource> viewImage(@PathVariable("filename") String filename) {
+        java.util.Optional<java.io.File> fileOpt = imageStorageService.resolveImage(filename);
+        if (fileOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        java.io.File file = fileOpt.get();
+        org.springframework.core.io.Resource resource = new org.springframework.core.io.FileSystemResource(file);
+        String contentType = "image/jpeg";
+        String lower = filename.toLowerCase();
+        if (lower.endsWith(".png")) contentType = "image/png";
+        else if (lower.endsWith(".svg")) contentType = "image/svg+xml";
+        else if (lower.endsWith(".webp")) contentType = "image/webp";
+
+        return ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+                .body(resource);
+    }
 }
