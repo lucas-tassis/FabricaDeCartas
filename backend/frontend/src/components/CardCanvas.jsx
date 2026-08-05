@@ -84,7 +84,7 @@ function CardCanvas({
             type="button"
             className={`btn ${showPreviewCard1 ? 'btn-primary' : 'btn-outline'}`}
             style={{ fontSize: '0.75rem', padding: '0.3rem 0.7rem' }}
-            onClick={(e) => { e.stopPropagation(); setShowPreviewCard1(!showPreviewCard1); }}
+            onClick={(e) => { e.stopPropagation(); setShowPreviewCard1?.(!showPreviewCard1); }}
           >
             {showPreviewCard1 ? '👁️ Pré-visualizar (Carta 1)' : '📝 Modo Estrutura [Colunas]'}
           </button>

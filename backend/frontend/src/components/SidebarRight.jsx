@@ -25,7 +25,7 @@ const PRESET_SIZES = [
 
 const BUILTIN_FONTS = ['Helvetica', 'Times', 'Courier'];
 
-function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSection, updateSectionConfig, columnTypes, sections, saveHistory, columns, showBleedGuides, setShowBleedGuides, snapToGrid, setSnapToGrid }) {
+function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSection, updateSectionConfig, columnTypes, sections, saveHistory, columns, showBleedGuides, setShowBleedGuides, snapToGrid, setSnapToGrid, showPreviewCard1, setShowPreviewCard1, firstRow }) {
   const { t } = useTranslation();
   const [systemFonts, setSystemFonts] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
