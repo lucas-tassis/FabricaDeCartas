@@ -262,11 +262,7 @@ public class CardRenderService {
             font = new PDType1Font(resolveFont(colConfig.getFontFamily(), colConfig.isBold()));
         }
 
-        text = text.replace("\n", " ").replace("\r", " ");
-        if (!isSystemFont) {
-            // Standard14 fonts only support Latin-1; strip non-ASCII
-            text = text.replaceAll("[^\\x00-\\x7F]", "");
-        }
+        text = sanitizeTextForFont(font, text);
         if (text.isEmpty()) return;
 
         float textWidth = font.getStringWidth(text) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
@@ -437,5 +433,34 @@ public class CardRenderService {
             (1f - b - k) / denom,
             k
         };
+    }
+
+    private String sanitizeTextForFont(PDFont font, String text) {
+        if (text == null || text.isEmpty()) return "";
+        text = text.replace("\n", " ").replace("\r", " ");
+        text = java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFC);
+
+        StringBuilder cleanText = new StringBuilder();
+        for (int i = 0; i < text.length(); ) {
+            int codePoint = text.codePointAt(i);
+            int charCount = Character.charCount(codePoint);
+            String strChar = new String(Character.toChars(codePoint));
+            i += charCount;
+
+            try {
+                font.encode(strChar);
+                cleanText.append(strChar);
+            } catch (Exception e) {
+                String asciiFallback = java.text.Normalizer.normalize(strChar, java.text.Normalizer.Form.NFD)
+                        .replaceAll("\\p{M}", "");
+                try {
+                    font.encode(asciiFallback);
+                    cleanText.append(asciiFallback);
+                } catch (Exception ex) {
+                    // ignore unencodable character
+                }
+            }
+        }
+        return cleanText.toString();
     }
 }
