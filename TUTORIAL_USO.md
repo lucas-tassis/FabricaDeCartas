@@ -131,6 +131,14 @@ Quando uma seção está selecionada, o **Painel Direito** expõe os seguintes a
   * **Contraste (%)**: Ajuste para destacar detalhes de ilustrações.
 * **Espaço de Cor**: Escolha entre **RGB** (Telas/Web) ou **CMYK** (Impressão Profissional).
 
+### 👁️ Pré-visualização em Tempo Real (Carta 1)
+Ao enviar a sua planilha Excel, a Fábrica de Cartas ativa automaticamente o modo de **Pré-visualização em Tempo Real**:
+1. **Dados Reais**: As seções vinculadas exibem instantaneamente os textos, cores e imagens referentes à **primeira carta da sua planilha**.
+2. **Edição Live (WYSIWYG)**: À medida que você altera o tamanho da fonte, família tipográfica, cor, alinhamento, rotação, ajustes de imagem (brilho/contraste) ou dimensões da seção, o Canvas se atualiza **em tempo real**!
+3. **Alternador de Modo**: No canto superior esquerdo do Canvas, você pode alternar entre:
+   - **`👁️ Pré-visualizar (Carta 1)`**: Exibe a arte final da primeira carta com os dados reais preenchidos.
+   - **`📝 Modo Estrutura [Colunas]`**: Exibe os rótulos genéricos das colunas para facilitar o desenho técnico das seções.
+
 ### 🔤 Fontes Personalizadas (.ttf / .otf) e Fontes do Computador
 A Fábrica de Cartas suporta o uso de **fontes personalizadas** no seu design:
 1. **Enviar arquivo de fonte (.ttf / .otf)**:
