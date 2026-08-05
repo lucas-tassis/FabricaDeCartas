@@ -131,6 +131,16 @@ Quando uma seção está selecionada, o **Painel Direito** expõe os seguintes a
   * **Contraste (%)**: Ajuste para destacar detalhes de ilustrações.
 * **Espaço de Cor**: Escolha entre **RGB** (Telas/Web) ou **CMYK** (Impressão Profissional).
 
+### 🔤 Fontes Personalizadas (.ttf / .otf) e Fontes do Computador
+A Fábrica de Cartas suporta o uso de **fontes personalizadas** no seu design:
+1. **Enviar arquivo de fonte (.ttf / .otf)**:
+   - No **Painel Direito**, ao selecionar uma seção de texto, clique no botão **`+ Enviar Fonte (.ttf / .otf)`**.
+   - Selecione o arquivo de fonte no seu computador.
+   - O arquivo será registrado no servidor para a renderização vetorial no PDF e carregado dinamicamente no navegador para pré-visualização instantânea no Canvas!
+2. **Buscar fontes do computador (Navegadores Chrome/Edge)**:
+   - Se estiver usando o Chrome ou Edge, clique no botão **`🔍 Buscar fontes do meu computador`**.
+   - O navegador solicitará permissão e listará automaticamente todas as famílias de fontes instaladas no seu sistema operacional!
+
 ### 🔄 Rotação de 90° na Impressão (Otimização de Espaço)
 Se você criar um design de carta na **horizontal** (ex: *88.9 mm de largura por 63.5 mm de altura*), é possível otimizar a distribuição no papel A4 ativando a rotação de 90°:
 1. No **Painel Direito** (Propriedades), marque a caixa de seleção **"Girar 90° no PDF (Otimizar Impressão)"**.
