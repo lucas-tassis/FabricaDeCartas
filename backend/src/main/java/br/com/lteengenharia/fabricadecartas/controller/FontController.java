@@ -34,12 +34,16 @@ public class FontController {
         }
 
         try {
-            File dest = new File(systemFontService.getCustomFontsDir(), originalName);
-            file.transferTo(dest);
+            File fontDir = systemFontService.getCustomFontsDir().getAbsoluteFile();
+            if (!fontDir.exists()) {
+                fontDir.mkdirs();
+            }
+            File dest = new File(fontDir, originalName);
+            java.nio.file.Files.copy(file.getInputStream(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             systemFontService.refresh();
             return ResponseEntity.ok("Fonte enviada com sucesso: " + originalName);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao salvar fonte: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao salvar fonte: " + e.getClass().getName() + " - " + e.getMessage());
         }
     }
 }

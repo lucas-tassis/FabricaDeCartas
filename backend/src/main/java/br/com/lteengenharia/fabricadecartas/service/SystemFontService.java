@@ -131,7 +131,7 @@ public class SystemFontService {
     }
 
     public File getCustomFontsDir() {
-        File dir = new File("uploads/fonts");
+        File dir = new File("uploads/fonts").getAbsoluteFile();
         if (!dir.exists()) {
             dir.mkdirs();
         }

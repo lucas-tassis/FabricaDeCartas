@@ -73,13 +73,25 @@ function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSect
   };
 
   const handleScanLocalFonts = async () => {
-    if (!('queryLocalFonts' in window)) return;
+    if (!('queryLocalFonts' in window)) {
+      alert("A busca automática de fontes não é suportada por este navegador. Por favor, utilize o botão '+ Enviar Fonte (.ttf/.otf)'!");
+      return;
+    }
     try {
       const localFonts = await window.queryLocalFonts();
+      if (!localFonts || localFonts.length === 0) {
+        alert("Nenhuma fonte encontrada ou a permissão foi negada.");
+        return;
+      }
       const uniqueFamilies = Array.from(new Set(localFonts.map(f => f.family))).sort();
       setSystemFonts(prev => Array.from(new Set([...prev, ...uniqueFamilies])).sort());
+      alert(`${uniqueFamilies.length} famílias de fontes do seu computador foram adicionadas à lista!`);
     } catch (err) {
-      console.warn("Could not query local fonts:", err);
+      if (err.name === 'NotAllowedError') {
+        alert("Permissão negada para acessar as fontes do computador.");
+      } else {
+        alert("Erro ao buscar fontes locais: " + (err.message || String(err)));
+      }
     }
   };
 
