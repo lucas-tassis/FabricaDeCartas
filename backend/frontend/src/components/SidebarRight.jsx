@@ -40,6 +40,49 @@ function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSect
     refreshImages();
   }, []);
 
+  const fontInputRef = React.useRef(null);
+
+  const refreshFonts = () => {
+    api.listFonts().then(fonts => setSystemFonts(fonts)).catch(() => {});
+  };
+
+  const handleFontUpload = async (e) => {
+    const fontFile = e.target.files?.[0];
+    if (!fontFile) return;
+
+    try {
+      await api.uploadFont(fontFile);
+
+      const familyName = fontFile.name.replace(/\.[^/.]+$/, "");
+      const fontUrl = URL.createObjectURL(fontFile);
+      const fontFace = new FontFace(familyName, `url(${fontUrl})`);
+      await fontFace.load();
+      document.fonts.add(fontFace);
+
+      refreshFonts();
+      if (activeSection) {
+        saveHistory(sections);
+        updateSectionConfig(activeSection.id, { fontFamily: familyName });
+      }
+      alert(t('font_uploaded_success'));
+    } catch (err) {
+      alert(err.serverDetail || err.message || String(err));
+    } finally {
+      if (fontInputRef.current) fontInputRef.current.value = '';
+    }
+  };
+
+  const handleScanLocalFonts = async () => {
+    if (!('queryLocalFonts' in window)) return;
+    try {
+      const localFonts = await window.queryLocalFonts();
+      const uniqueFamilies = Array.from(new Set(localFonts.map(f => f.family))).sort();
+      setSystemFonts(prev => Array.from(new Set([...prev, ...uniqueFamilies])).sort());
+    } catch (err) {
+      console.warn("Could not query local fonts:", err);
+    }
+  };
+
   const effectiveType = activeSection?.linkedColumn
     ? (columnTypes?.[activeSection.linkedColumn] || 'text')
     : 'text';
@@ -324,13 +367,40 @@ function SidebarRight({ template, setTemplate, gridSize, setGridSize, activeSect
                     <option value="Courier">Courier</option>
                   </optgroup>
                   {systemFonts.filter(f => !BUILTIN_FONTS.includes(f)).length > 0 && (
-                    <optgroup label="Fontes do sistema">
+                    <optgroup label="Fontes do sistema / enviadas">
                       {systemFonts
                         .filter(f => !BUILTIN_FONTS.includes(f))
                         .map(f => <option key={f} value={f}>{f}</option>)}
                     </optgroup>
                   )}
                 </select>
+                <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.4rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.5rem', flex: 1 }}
+                    onClick={() => fontInputRef.current?.click()}
+                  >
+                    + {t('upload_font')}
+                  </button>
+                  {'queryLocalFonts' in window && (
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      style={{ fontSize: '0.75rem', padding: '0.3rem 0.5rem', flex: 1 }}
+                      onClick={handleScanLocalFonts}
+                    >
+                      🔍 {t('scan_local_fonts')}
+                    </button>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  accept=".ttf,.otf"
+                  ref={fontInputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleFontUpload}
+                />
               </div>
 
               <div className="control-group">

@@ -130,6 +130,17 @@ export const api = {
     return response.json(); // string[]
   },
 
+  async uploadFont(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await safeFetch(`${API_BASE_URL}/api/fonts/upload`, {
+      method: 'POST',
+      body: formData,
+      _context: `Fonte: ${file.name}`,
+    });
+    return response.text();
+  },
+
   async shutdown() {
     await safeFetch(`${API_BASE_URL}/api/cards/shutdown`, { method: 'POST' });
   },

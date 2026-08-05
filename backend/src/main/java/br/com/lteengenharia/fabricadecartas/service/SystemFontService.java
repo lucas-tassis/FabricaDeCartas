@@ -126,6 +126,19 @@ public class SystemFontService {
             dirs.add(new File("/usr/local/share/fonts"));
             dirs.add(new File(System.getProperty("user.home") + "/.fonts"));
         }
+        dirs.add(getCustomFontsDir());
         return dirs;
+    }
+
+    public File getCustomFontsDir() {
+        File dir = new File("uploads/fonts");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    public synchronized void refresh() {
+        this.cache = buildCache();
     }
 }

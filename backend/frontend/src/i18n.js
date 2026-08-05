@@ -93,6 +93,10 @@ const resources = {
       "show_bleed_guides": "Exibir Guias de Sangria (3mm)",
       "snap_to_grid": "Ajustar ao Grid (Snap)",
       "rotate_90_for_print": "Girar 90° no PDF (Otimizar Impressão)",
+      "upload_font": "Enviar Fonte (.ttf / .otf)",
+      "upload_font_hint": "Clique para enviar arquivos de fonte .ttf ou .otf",
+      "scan_local_fonts": "Buscar fontes do meu computador",
+      "font_uploaded_success": "Fonte carregada com sucesso!",
       "shutdown": "Desligar App",
       "shutdown_message": "O aplicativo foi desligado com sucesso. Você já pode fechar esta aba do navegador."
     }
@@ -188,6 +192,10 @@ const resources = {
       "show_bleed_guides": "Show Bleed Guides (3mm)",
       "snap_to_grid": "Snap to Grid",
       "rotate_90_for_print": "Rotate 90° for PDF Print",
+      "upload_font": "Upload Font (.ttf / .otf)",
+      "upload_font_hint": "Click to upload .ttf or .otf font files",
+      "scan_local_fonts": "Scan local system fonts",
+      "font_uploaded_success": "Font uploaded successfully!",
       "shutdown": "Shutdown App",
       "shutdown_message": "The application has been shut down successfully. You can now close this browser tab."
     }
