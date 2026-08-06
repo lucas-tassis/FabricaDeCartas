@@ -139,6 +139,16 @@ Ao enviar a sua planilha Excel, a Fábrica de Cartas ativa automaticamente o mod
    - **`👁️ Pré-visualizar (Carta 1)`**: Exibe a arte final da primeira carta com os dados reais preenchidos.
    - **`📝 Modo Estrutura [Colunas]`**: Exibe os rótulos genéricos das colunas para facilitar o desenho técnico das seções.
 
+### 🖼️ Imagem de Fundo da Carta (Frente)
+Você pode adicionar uma imagem de fundo que cobrirá toda a superfície frontal da carta, ficando situada **atrás de todas as seções, textos e cores**:
+1. No **Painel Direito** (3. Propriedades), localize a seção **`Imagem de Fundo (Frente)`**.
+2. Clique no botão **`+ Enviar Imagem de Fundo`** (ou selecione uma imagem já enviada na lista).
+3. Ajuste o modo de exibição:
+   - **Cover (Cobre tudo)**: Preenche toda a carta proporcionalmente (recomendado para artes de fundo).
+   - **Contain (Contido)**: Mantém a proporção exata da imagem sem cortar nada.
+   - **Fill (Preencher)**: Estica a imagem para ocupar exatamente a largura e altura.
+4. **Camadas**: Todas as seções de texto, cores e imagens de colunas continuarão posicionadas por cima dessa imagem de fundo, tanto na pré-visualização ao vivo quanto na geração do PDF!
+
 ### 🔤 Fontes Personalizadas (.ttf / .otf) e Fontes do Computador
 A Fábrica de Cartas suporta o uso de **fontes personalizadas** no seu design:
 1. **Enviar arquivo de fonte (.ttf / .otf)**:
