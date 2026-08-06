@@ -613,8 +613,57 @@ p {
 
 .no-bg-label {
   font-size: 0.78rem;
-  color: #555;
+  color: #888;
   font-style: italic;
+}
+
+.no-selection-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: center !important;
+  font-size: 0.78rem !important;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 0.4rem !important;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
 .grid-pos-badge {
