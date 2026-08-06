@@ -113,6 +113,27 @@ function CardCanvas({
               : '1px dashed #cccccc',
           }}
         >
+          {template.cardBackgroundImage && (
+            <img
+              src={
+                template.cardBackgroundImage.startsWith('http://') || template.cardBackgroundImage.startsWith('https://') || template.cardBackgroundImage.startsWith('data:')
+                  ? template.cardBackgroundImage
+                  : `/api/images/view/${encodeURIComponent(template.cardBackgroundImage)}`
+              }
+              alt="Fundo da Carta"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: template.cardBackgroundFit === 'contain' ? 'contain' : template.cardBackgroundFit === 'fill' ? 'fill' : 'cover',
+                pointerEvents: 'none',
+                zIndex: 0,
+              }}
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          )}
           {showBleedGuides && (
             <div
               className="bleed-guide"

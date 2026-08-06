@@ -51,6 +51,8 @@ public class CardRenderService {
                 (float) template.getCardWidth(), (float) template.getCardHeight());
         contentStream.clip();
 
+        drawCardBackground(document, contentStream, template, startX, startY);
+
         for (ColumnConfigDTO colConfig : template.getColumns()) {
             String colName = colConfig.getColumnName();
             String cellValue = (colName == null || colName.isBlank())
@@ -315,6 +317,50 @@ public class CardRenderService {
         if (doRotate) {
             contentStream.restoreGraphicsState();
         }
+    }
+
+    private void drawCardBackground(PDDocument document, PDPageContentStream contentStream,
+                                    TemplateConfigDTO template, double startX, double startY) {
+        String bgName = template.getCardBackgroundImage();
+        if (bgName == null || bgName.isBlank()) return;
+
+        imageStorageService.resolveImage(bgName).ifPresent(imgFile -> {
+            try {
+                PDImageXObject pdImage = PDImageXObject.createFromFile(imgFile.getAbsolutePath(), document);
+                float boxX = (float) startX;
+                float boxY = (float) startY;
+                float boxW = (float) template.getCardWidth();
+                float boxH = (float) template.getCardHeight();
+                float imgW = pdImage.getWidth();
+                float imgH = pdImage.getHeight();
+
+                float drawX = boxX, drawY = boxY, drawW = boxW, drawH = boxH;
+                String fit = template.getCardBackgroundFit();
+                if (fit == null) fit = "cover";
+
+                switch (fit.toLowerCase()) {
+                    case "contain" -> {
+                        float scale = Math.min(boxW / imgW, boxH / imgH);
+                        drawW = imgW * scale;
+                        drawH = imgH * scale;
+                        drawX = boxX + (boxW - drawW) / 2f;
+                        drawY = boxY + (boxH - drawH) / 2f;
+                    }
+                    case "cover" -> {
+                        float scale = Math.max(boxW / imgW, boxH / imgH);
+                        drawW = imgW * scale;
+                        drawH = imgH * scale;
+                        drawX = boxX + (boxW - drawW) / 2f;
+                        drawY = boxY + (boxH - drawH) / 2f;
+                    }
+                    case "fill" -> { /* drawW = boxW, drawH = boxH */ }
+                }
+
+                contentStream.drawImage(pdImage, drawX, drawY, drawW, drawH);
+            } catch (Exception e) {
+                log.warn("Failed to draw card background image '{}': {}", bgName, e.getMessage());
+            }
+        });
     }
 
     public void drawCardBack(PDDocument document, PDPageContentStream contentStream,
