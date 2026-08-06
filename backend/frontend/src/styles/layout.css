@@ -1,0 +1,85 @@
+/* Layout Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+header {
+  padding: 0.5rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-panel);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.header-logo {
+  height: 40px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-layout-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.header-export-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.export-format-select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: inherit;
+}
+
+main {
+  flex: 1;
+  padding: 0.6rem;
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.sidebar {
+  width: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 56px - 1.5rem);
+  flex-shrink: 0;
+}
+
+.editor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  overflow: visible;
+  padding: 0 0 1.5rem 0;
+}

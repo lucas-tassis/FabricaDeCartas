@@ -1,0 +1,87 @@
+/* Card Canvas Container */
+.card-canvas-container {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 740px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.card-canvas {
+  background-color: white;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.2) 1px, transparent 1px);
+  position: relative;
+  border: 1px solid #000;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+.draggable-item {
+  position: absolute;
+  display: flex;
+  cursor: default;
+  user-select: none;
+  padding: 4px;
+  border: 1px dashed transparent;
+  transition: border 0.2s;
+  overflow: hidden;
+}
+
+.draggable-item:hover {
+  border-color: var(--primary);
+}
+
+.draggable-item:active {
+  cursor: default;
+}
+
+.draggable-item.selected {
+  border-color: var(--accent);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* Canvas Selection Overlay */
+.selection-box {
+  position: absolute;
+  border: 1px solid;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.selected-cell {
+  position: absolute;
+  background-color: rgba(244, 177, 75, 0.4);
+  border: 1px solid var(--primary);
+  pointer-events: none;
+}
+
+.section-cell {
+  position: absolute;
+  pointer-events: none;
+}
+
+.grid-pos-badge {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: 'Inter', monospace;
+  padding: 3px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.04em;
+  z-index: 9999;
+  white-space: nowrap;
+}

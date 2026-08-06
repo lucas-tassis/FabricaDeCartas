@@ -1,0 +1,176 @@
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #2a2a2a;
+  box-shadow: 0 4px 15px rgba(244, 177, 75, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 6px 20px rgba(244, 177, 75, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: rgba(244, 177, 75, 0.1);
+}
+
+.btn-exporting {
+  cursor: not-allowed;
+}
+
+.btn-shutdown {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.btn-shutdown:hover {
+  background: rgba(171, 18, 25, 0.15) !important;
+}
+
+/* Context Menu */
+.context-menu {
+  position: fixed;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  min-width: 150px;
+}
+
+.menu-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--text-main);
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: 320px;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.modal-message {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 0;
+}
+
+.modal-message--success { color: var(--success); }
+.modal-message--error   { color: #ef4444; }
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.btn-error-log {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.btn-error-log:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* Shutdown Overlay */
+.shutdown-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(15px);
+}
+
+.shutdown-box {
+  padding: 3rem;
+  text-align: center;
+  max-width: 500px;
+  animation: scaleUp 0.3s ease-out;
+}
+
+.shutdown-box h2 {
+  color: var(--danger);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

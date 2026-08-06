@@ -1,0 +1,295 @@
+/* Sidebar Padding & Groups */
+.sidebar-padding {
+  padding: 0.4rem;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Forms and Inputs */
+.file-upload-wrapper {
+  border: 2px dashed var(--border-color);
+  padding: 2rem;
+  text-align: center;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-upload-wrapper:hover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+/* Control Panel */
+.control-group {
+  margin-bottom: 0.35rem;
+}
+
+.control-group label {
+  display: block;
+  font-size: 0.72rem;
+  margin-bottom: 0.1rem;
+  color: var(--text-muted);
+}
+
+.control-group input,
+.control-group select {
+  width: 100%;
+  padding: 0.25rem 0.45rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: inherit;
+}
+
+.control-group input:focus,
+.control-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: center !important;
+  font-size: 0.78rem !important;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 0.4rem !important;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* Card Size & Dimensions */
+.card-size-inputs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.props-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0.4rem 0;
+}
+
+/* Columns Panel */
+.columns-panel {
+  margin-top: 1rem;
+}
+
+.columns-panel h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.column-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+}
+
+.column-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.column-item:hover {
+  border-color: rgba(244, 177, 75, 0.35);
+}
+
+.column-item--drop-target {
+  border-color: var(--primary);
+  border-top: 2px solid var(--primary);
+  background: rgba(244, 177, 75, 0.08);
+}
+
+.drag-handle {
+  cursor: grab;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+  padding: 0 2px;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.column-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.column-id-area {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.column-id-area--linked {
+  cursor: pointer;
+}
+
+.column-id-area--linked:hover .column-name {
+  color: var(--primary);
+}
+
+.column-id-area--linked:hover .column-color-dot {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.column-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.column-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.column-color-dot--empty {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+.column-section-select {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.78rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  max-width: 105px;
+  font-family: inherit;
+}
+
+.column-section-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Segmented Control */
+.segmented-control {
+  display: flex;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.segmented-btn {
+  flex: 1;
+  padding: 0.25rem 0;
+  border: none;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+
+.segmented-btn--active {
+  background: var(--primary);
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+/* Color Picker with Clear Button */
+.color-with-clear {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color-with-clear input[type="color"] {
+  width: 48px;
+  height: 36px;
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-dark);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.clear-color-btn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.clear-color-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.no-bg-label {
+  font-size: 0.78rem;
+  color: #888;
+  font-style: italic;
+}
+
+.no-selection-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
