@@ -129,23 +129,24 @@ function CardCanvas({
                 height: '100%',
                 objectFit: template.cardBackgroundFit === 'contain' ? 'contain' : template.cardBackgroundFit === 'fill' ? 'fill' : 'cover',
                 pointerEvents: 'none',
-                zIndex: 0,
+                zIndex: 1,
               }}
               onError={(e) => { e.target.style.display = 'none'; }}
             />
           )}
-          {/* Grid overlay layer above card background image */}
+          {/* Transparent Grid Overlay (fine lines only, transparent fill) */}
           <div
             className="grid-overlay"
             style={{
               position: 'absolute',
               inset: 0,
               pointerEvents: 'none',
-              zIndex: 1,
+              zIndex: 2,
+              backgroundColor: 'transparent',
               backgroundSize: `${gridPx}px ${gridPx}px`,
               backgroundImage: `
-                linear-gradient(to right, rgba(0, 0, 0, 0.22) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 1px, transparent 1px)
+                linear-gradient(to right, ${gridPx < 3 ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.15)'} 1px, transparent 1px),
+                linear-gradient(to bottom, ${gridPx < 3 ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.15)'} 1px, transparent 1px)
               `,
             }}
           />
