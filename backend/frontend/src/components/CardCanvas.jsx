@@ -232,7 +232,7 @@ function CardCanvas({
                       top: `${y}px`,
                       width: `${sqW}px`,
                       height: `${sqH}px`,
-                      backgroundColor: section.color,
+                      backgroundColor: bgFillColor || section.color,
                       zIndex: 3,
                     }} />
                   );
@@ -267,7 +267,7 @@ function CardCanvas({
                     color: section.fontColor || '#000000',
                     fontWeight: section.bold ? 'bold' : 'normal',
                     textAlign: section.textAlign,
-                    backgroundColor: bgFillColor,
+                    backgroundColor: 'transparent',
                     border: safeParse(section.borderThickness, 0) > 0
                       ? `${safeParse(section.borderThickness, 0) * (MM_TO_PX / MM_TO_PT)}px solid ${section.fontColor || '#000000'}`
                       : 'none',

@@ -167,7 +167,7 @@ function App() {
         backgroundColor: s.backgroundColor || '',
         brightness: safeParse(s.brightness, 100),
         contrast: safeParse(s.contrast, 100),
-        squareRects: (colType === 'bordas')
+        squareRects: (s.squares && s.squares.length > 0)
           ? s.squares.map(key => {
               const [sqX, sqY] = key.split(',').map(Number);
               const sqPt = safeParse(gridSize, DEFAULT_GRID_SIZE_MM) * MM_TO_PT;

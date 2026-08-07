@@ -134,9 +134,19 @@ public class CardRenderService {
         Color color = colorService.parseColor(colConfig.getColor());
         contentStream.setLineWidth((float) colConfig.getBorderThickness());
         contentStream.setStrokingColor(color);
-        float boxX = (float) (startX + colConfig.getX());
-        float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - colConfig.getHeight());
-        contentStream.addRect(boxX, boxY, (float) colConfig.getWidth(), (float) colConfig.getHeight());
+
+        double[][] squares = colConfig.getSquareRects();
+        if (squares != null && squares.length > 0) {
+            for (double[] sq : squares) {
+                float sqX = (float) (startX + sq[0]);
+                float sqY = (float) (startY + template.getCardHeight() - sq[1] - sq[3]);
+                contentStream.addRect(sqX, sqY, (float) sq[2], (float) sq[3]);
+            }
+        } else {
+            float boxX = (float) (startX + colConfig.getX());
+            float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - colConfig.getHeight());
+            contentStream.addRect(boxX, boxY, (float) colConfig.getWidth(), (float) colConfig.getHeight());
+        }
         contentStream.stroke();
         contentStream.setLineWidth(1f);
     }
@@ -203,7 +213,16 @@ public class CardRenderService {
                 }
 
                 contentStream.saveGraphicsState();
-                contentStream.addRect(boxX, boxY, boxW, boxH);
+                double[][] squares = colConfig.getSquareRects();
+                if (squares != null && squares.length > 0) {
+                    for (double[] sq : squares) {
+                        float sqX = (float) (startX + sq[0]);
+                        float sqY = (float) (startY + template.getCardHeight() - sq[1] - sq[3]);
+                        contentStream.addRect(sqX, sqY, (float) sq[2], (float) sq[3]);
+                    }
+                } else {
+                    contentStream.addRect(boxX, boxY, boxW, boxH);
+                }
                 contentStream.clip();
                 contentStream.drawImage(pdImage, drawX, drawY, drawW, drawH);
                 contentStream.restoreGraphicsState();
@@ -298,10 +317,20 @@ public class CardRenderService {
         String bg = colConfig.getBackgroundColor();
         if (bg == null || bg.isBlank()) return;
         Color color = colorService.parseColor(bg);
-        float boxX = (float) (startX + colConfig.getX());
-        float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - colConfig.getHeight());
         contentStream.setNonStrokingColor(color);
-        contentStream.addRect(boxX, boxY, (float) colConfig.getWidth(), (float) colConfig.getHeight());
+
+        double[][] squares = colConfig.getSquareRects();
+        if (squares != null && squares.length > 0) {
+            for (double[] sq : squares) {
+                float sqX = (float) (startX + sq[0]);
+                float sqY = (float) (startY + template.getCardHeight() - sq[1] - sq[3]);
+                contentStream.addRect(sqX, sqY, (float) sq[2], (float) sq[3]);
+            }
+        } else {
+            float boxX = (float) (startX + colConfig.getX());
+            float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - colConfig.getHeight());
+            contentStream.addRect(boxX, boxY, (float) colConfig.getWidth(), (float) colConfig.getHeight());
+        }
         contentStream.fill();
     }
 
