@@ -134,6 +134,21 @@ function CardCanvas({
               onError={(e) => { e.target.style.display = 'none'; }}
             />
           )}
+          {/* Grid overlay layer above card background image */}
+          <div
+            className="grid-overlay"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 1,
+              backgroundSize: `${gridPx}px ${gridPx}px`,
+              backgroundImage: `
+                linear-gradient(to right, rgba(0, 0, 0, 0.22) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 1px, transparent 1px)
+              `,
+            }}
+          />
           {showBleedGuides && (
             <div
               className="bleed-guide"

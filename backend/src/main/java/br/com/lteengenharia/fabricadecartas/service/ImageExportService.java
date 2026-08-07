@@ -29,7 +29,10 @@ public class ImageExportService {
     }
 
     public byte[] generate(List<Map<String, String>> data, TemplateConfigDTO template, String format) throws Exception {
-        PDRectangle cardRect = new PDRectangle((float) template.getCardWidth(), (float) template.getCardHeight());
+        PDRectangle cardRect = new PDRectangle(
+                (float) (template.getCardWidth() * AppConstants.MM_TO_POINTS),
+                (float) (template.getCardHeight() * AppConstants.MM_TO_POINTS)
+        );
         String imgFormat = "jpg".equalsIgnoreCase(format) ? "JPEG" : "PNG";
         String extension = format.toLowerCase();
 

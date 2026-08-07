@@ -1,5 +1,6 @@
 package br.com.lteengenharia.fabricadecartas.service.render;
 
+import br.com.lteengenharia.fabricadecartas.config.AppConstants;
 import br.com.lteengenharia.fabricadecartas.dto.TemplateConfigDTO;
 import br.com.lteengenharia.fabricadecartas.service.ImageStorageService;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -30,8 +31,8 @@ public class CardBackgroundRenderer {
                 PDImageXObject pdImage = PDImageXObject.createFromFile(imgFile.getAbsolutePath(), document);
                 float boxX = (float) startX;
                 float boxY = (float) startY;
-                float boxW = (float) template.getCardWidth();
-                float boxH = (float) template.getCardHeight();
+                float boxW = (float) (template.getCardWidth() * AppConstants.MM_TO_POINTS);
+                float boxH = (float) (template.getCardHeight() * AppConstants.MM_TO_POINTS);
                 float imgW = pdImage.getWidth();
                 float imgH = pdImage.getHeight();
 
@@ -74,8 +75,8 @@ public class CardBackgroundRenderer {
                 PDImageXObject pdImage = PDImageXObject.createFromFile(imgFile.getAbsolutePath(), document);
                 float boxX = (float) startX;
                 float boxY = (float) startY;
-                float boxW = (float) template.getCardWidth();
-                float boxH = (float) template.getCardHeight();
+                float boxW = (float) (template.getCardWidth() * AppConstants.MM_TO_POINTS);
+                float boxH = (float) (template.getCardHeight() * AppConstants.MM_TO_POINTS);
 
                 float imgW = pdImage.getWidth();
                 float imgH = pdImage.getHeight();
