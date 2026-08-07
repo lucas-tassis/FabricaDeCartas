@@ -188,6 +188,7 @@ function CardCanvas({
                 top: `${y}px`,
                 width: `${gridPx}px`,
                 height: `${gridPx}px`,
+                zIndex: 5,
               }} />
             );
           })}
@@ -232,6 +233,7 @@ function CardCanvas({
                       width: `${sqW}px`,
                       height: `${sqH}px`,
                       backgroundColor: section.color,
+                      zIndex: 3,
                     }} />
                   );
                 })}
@@ -248,6 +250,8 @@ function CardCanvas({
                   onClick={(e) => e.stopPropagation()}
                   onContextMenu={(e) => { e.preventDefault(); onSectionClick(section.id); onContextMenu(e); }}
                   style={{
+                    position: 'absolute',
+                    zIndex: isSelected ? 10 : 4,
                     left: `${bounds.minX}px`,
                     top: `${bounds.minY}px`,
                     width: `${bounds.width}px`,
