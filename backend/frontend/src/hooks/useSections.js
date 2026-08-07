@@ -79,7 +79,7 @@ export function useSections() {
       bold: true,
       textAlign: 'center',
       vAlign: 'center',
-      borderThickness: 0.2,
+      borderThickness: 0,
       imageFit: 'smart',
       colorSpace: 'RGB',
       backgroundColor: '#ffffff',

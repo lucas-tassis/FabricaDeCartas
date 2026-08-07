@@ -134,19 +134,9 @@ public class CardRenderService {
         Color color = colorService.parseColor(colConfig.getColor());
         contentStream.setLineWidth((float) colConfig.getBorderThickness());
         contentStream.setStrokingColor(color);
-
-        double[][] squares = colConfig.getSquareRects();
-        if (squares != null && squares.length > 0) {
-            for (double[] sq : squares) {
-                float sqX = (float) (startX + sq[0]);
-                float sqY = (float) (startY + template.getCardHeight() - sq[1] - sq[3]);
-                contentStream.addRect(sqX, sqY, (float) sq[2], (float) sq[3]);
-            }
-        } else {
-            float boxX = (float) (startX + colConfig.getX());
-            float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - colConfig.getHeight());
-            contentStream.addRect(boxX, boxY, (float) colConfig.getWidth(), (float) colConfig.getHeight());
-        }
+        float boxX = (float) (startX + colConfig.getX());
+        float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - colConfig.getHeight());
+        contentStream.addRect(boxX, boxY, (float) colConfig.getWidth(), (float) colConfig.getHeight());
         contentStream.stroke();
         contentStream.setLineWidth(1f);
     }
