@@ -189,6 +189,8 @@ function App() {
       columns: [...unlinked, ...linked].map(sectionToConfig),
       cardBorderColor: template.cardBorderColor || '#000000',
       cardBorderThickness: safeParse(template.cardBorderThickness, 0.3) * MM_TO_PT,
+      cardBackgroundImage: template.cardBackgroundImage || '',
+      cardBackgroundFit: template.cardBackgroundFit || 'cover',
       cardBackType: template.cardBackType || 'none',
       cardBackValue: template.cardBackValue || '',
       cardBackDirection: template.cardBackDirection || 'separate',

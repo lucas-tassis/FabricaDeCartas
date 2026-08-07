@@ -31,8 +31,8 @@ public class CardBackgroundRenderer {
                 PDImageXObject pdImage = PDImageXObject.createFromFile(imgFile.getAbsolutePath(), document);
                 float boxX = (float) startX;
                 float boxY = (float) startY;
-                float boxW = (float) (template.getCardWidth() * AppConstants.MM_TO_POINTS);
-                float boxH = (float) (template.getCardHeight() * AppConstants.MM_TO_POINTS);
+                float boxW = (float) template.getCardWidth();
+                float boxH = (float) template.getCardHeight();
                 float imgW = pdImage.getWidth();
                 float imgH = pdImage.getHeight();
 
@@ -75,8 +75,8 @@ public class CardBackgroundRenderer {
                 PDImageXObject pdImage = PDImageXObject.createFromFile(imgFile.getAbsolutePath(), document);
                 float boxX = (float) startX;
                 float boxY = (float) startY;
-                float boxW = (float) (template.getCardWidth() * AppConstants.MM_TO_POINTS);
-                float boxH = (float) (template.getCardHeight() * AppConstants.MM_TO_POINTS);
+                float boxW = (float) template.getCardWidth();
+                float boxH = (float) template.getCardHeight();
 
                 float imgW = pdImage.getWidth();
                 float imgH = pdImage.getHeight();
