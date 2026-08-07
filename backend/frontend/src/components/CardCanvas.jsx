@@ -180,6 +180,35 @@ function CardCanvas({
             />
           )}
 
+          {/* SVG ClipPaths for irregular section shapes */}
+          <svg width="0" height="0" style={{ position: 'absolute', pointerEvents: 'none' }}>
+            <defs>
+              {sections.map(section => {
+                const bounds = getSectionBounds(section, gridPx, canvasWidthPx, canvasHeightPx);
+                return (
+                  <clipPath id={`section-clip-${section.id}`} key={section.id}>
+                    {section.squares.map(key => {
+                      const [x, y] = key.split(',').map(Number);
+                      const relX = x - bounds.minX;
+                      const relY = y - bounds.minY;
+                      const sqW = (x + gridPx >= canvasWidthPx) ? canvasWidthPx - x : gridPx;
+                      const sqH = (y + gridPx >= canvasHeightPx) ? canvasHeightPx - y : gridPx;
+                      return (
+                        <rect
+                          key={key}
+                          x={relX}
+                          y={relY}
+                          width={sqW}
+                          height={sqH}
+                        />
+                      );
+                    })}
+                  </clipPath>
+                );
+              })}
+            </defs>
+          </svg>
+
           {selectedSquares.map(key => {
             const [x, y] = key.split(',').map(Number);
             return (
@@ -252,6 +281,7 @@ function CardCanvas({
                   style={{
                     position: 'absolute',
                     zIndex: isSelected ? 10 : 4,
+                    clipPath: `url(#section-clip-${section.id})`,
                     left: `${bounds.minX}px`,
                     top: `${bounds.minY}px`,
                     width: `${bounds.width}px`,
