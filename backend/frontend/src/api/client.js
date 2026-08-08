@@ -151,8 +151,4 @@ export const api = {
     });
     return response.text();
   },
-
-  async shutdown() {
-    await safeFetch(`${API_BASE_URL}/api/cards/shutdown`, { method: 'POST' });
-  },
 };

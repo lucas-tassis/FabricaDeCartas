@@ -25,18 +25,6 @@ function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [lastError, setLastError] = useState(null);
   const [modal, setModal] = useState(null); // { type: 'success' | 'error' }
-  const [isShutdown, setIsShutdown] = useState(false);
-
-  const handleShutdown = async () => {
-    if (!window.confirm(t('shutdown') + '?')) return;
-    try {
-      await api.shutdown();
-      setIsShutdown(true);
-    } catch (err) {
-      console.error(err);
-      setIsShutdown(true);
-    }
-  };
 
   useEffect(() => {
     if (!modal) return;
@@ -377,9 +365,6 @@ function App() {
             </button>
             <button className="btn btn-outline" onClick={(e) => { e.stopPropagation(); redo(); }} disabled={future.length === 0} title="Ctrl+Y">
               {t('redo')}
-            </button>
-            <button className="btn btn-outline btn-shutdown" onClick={handleShutdown}>
-              {t('shutdown')}
             </button>
           </div>
           {file && (

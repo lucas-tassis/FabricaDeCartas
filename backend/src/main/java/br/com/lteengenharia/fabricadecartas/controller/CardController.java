@@ -98,16 +98,4 @@ public class CardController {
                     .body(stackTraceToBytes(e));
         }
     }
-
-    @PostMapping("/shutdown")
-    public ResponseEntity<Void> shutdown() {
-        log.info("Shutdown requested. Exiting application in 500ms...");
-        new Thread(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) {}
-            System.exit(0);
-        }).start();
-        return ResponseEntity.ok().build();
-    }
 }
