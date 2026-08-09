@@ -82,7 +82,7 @@ export function useSections() {
       borderThickness: 0,
       imageFit: 'smart',
       colorSpace: 'RGB',
-      backgroundColor: '#ffffff',
+      backgroundColor: '',
       brightness: 100, // default filter property
       contrast: 100, // default filter property
     };
