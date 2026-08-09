@@ -322,17 +322,6 @@ function App() {
     reader.readAsText(uploadedFile);
   };
 
-  if (isShutdown) {
-    return (
-      <div className="shutdown-overlay">
-        <div className="shutdown-box glass-panel">
-          <h2>{t('shutdown')}</h2>
-          <p>{t('shutdown_message')}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       className="app-container"
