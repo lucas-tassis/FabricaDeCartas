@@ -12,7 +12,7 @@ import {
   DEFAULT_GRID_SIZE_MM, DEFAULT_CARD_WIDTH_MM, DEFAULT_CARD_HEIGHT_MM,
   URL_REVOKE_DELAY_MS, EXPORT_BUTTON_OPACITY_DISABLED,
 } from './constants';
-import { buildDownloadLink, getSectionBounds, safeParse } from './utils';
+import { buildDownloadLink, getSectionBounds, safeParse, mergeSquaresToRects } from './utils';
 import './index.css';
 
 function App() {
@@ -156,11 +156,12 @@ function App() {
         brightness: safeParse(s.brightness, 100),
         contrast: safeParse(s.contrast, 100),
         squareRects: (s.squares && s.squares.length > 0)
-          ? s.squares.map(key => {
-              const [sqX, sqY] = key.split(',').map(Number);
-              const sqPt = safeParse(gridSize, DEFAULT_GRID_SIZE_MM) * MM_TO_PT;
-              return [(sqX / MM_TO_PX) * MM_TO_PT, (sqY / MM_TO_PX) * MM_TO_PT, sqPt, sqPt];
-            })
+          ? mergeSquaresToRects(s.squares, safeParse(gridSize, DEFAULT_GRID_SIZE_MM) * MM_TO_PX).map(r => [
+              (r.x / MM_TO_PX) * MM_TO_PT,
+              (r.y / MM_TO_PX) * MM_TO_PT,
+              (r.width / MM_TO_PX) * MM_TO_PT,
+              (r.height / MM_TO_PX) * MM_TO_PT,
+            ])
           : null,
       };
     };

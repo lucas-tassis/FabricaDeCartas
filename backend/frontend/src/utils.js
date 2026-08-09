@@ -41,3 +41,35 @@ export const safeParse = (val, fallback = 0) => {
   return isNaN(num) ? fallback : num;
 };
 
+export const mergeSquaresToRects = (squares, gridPx) => {
+  if (!squares || squares.length === 0) return [];
+
+  const rows = new Map();
+  for (const key of squares) {
+    const [x, y] = key.split(',').map(Number);
+    if (!rows.has(y)) rows.set(y, []);
+    rows.get(y).push(x);
+  }
+
+  const merged = [];
+  for (const [y, xList] of rows.entries()) {
+    xList.sort((a, b) => a - b);
+    let startX = xList[0];
+    let prevX = xList[0];
+
+    for (let i = 1; i < xList.length; i++) {
+      const x = xList[i];
+      if (Math.abs(x - (prevX + gridPx)) < 0.1) {
+        prevX = x;
+      } else {
+        merged.push({ x: startX, y, width: prevX - startX + gridPx, height: gridPx });
+        startX = x;
+        prevX = x;
+      }
+    }
+    merged.push({ x: startX, y, width: prevX - startX + gridPx, height: gridPx });
+  }
+
+  return merged;
+};
+

@@ -1,6 +1,6 @@
 import { Fragment, useState, useCallback, useRef, useEffect } from 'react';
 import { MM_TO_PX, MM_TO_PT } from '../constants';
-import { getSectionBounds, safeParse } from '../utils';
+import { getSectionBounds, safeParse, mergeSquaresToRects } from '../utils';
 
 const HANDLE_DIRS = ['n', 's', 'w', 'e'];
 const HANDLE_CURSOR = { n: 'ns-resize', s: 'ns-resize', w: 'ew-resize', e: 'ew-resize' };
@@ -185,21 +185,19 @@ function CardCanvas({
             <defs>
               {sections.map(section => {
                 const bounds = getSectionBounds(section, gridPx, canvasWidthPx, canvasHeightPx);
+                const merged = mergeSquaresToRects(section.squares, gridPx);
                 return (
                   <clipPath id={`section-clip-${section.id}`} key={section.id}>
-                    {section.squares.map(key => {
-                      const [x, y] = key.split(',').map(Number);
-                      const relX = x - bounds.minX;
-                      const relY = y - bounds.minY;
-                      const sqW = (x + gridPx >= canvasWidthPx) ? canvasWidthPx - x : gridPx;
-                      const sqH = (y + gridPx >= canvasHeightPx) ? canvasHeightPx - y : gridPx;
+                    {merged.map((r, idx) => {
+                      const relX = r.x - bounds.minX;
+                      const relY = r.y - bounds.minY;
                       return (
                         <rect
-                          key={key}
+                          key={idx}
                           x={relX}
                           y={relY}
-                          width={sqW}
-                          height={sqH}
+                          width={r.width}
+                          height={r.height}
                         />
                       );
                     })}
@@ -251,21 +249,16 @@ function CardCanvas({
 
             return (
               <Fragment key={section.id}>
-                {section.squares.map(key => {
-                  const [x, y] = key.split(',').map(Number);
-                  const sqW = (x + gridPx >= canvasWidthPx) ? canvasWidthPx - x : gridPx;
-                  const sqH = (y + gridPx >= canvasHeightPx) ? canvasHeightPx - y : gridPx;
-                  return (
-                    <div key={key} className="section-cell" style={{
-                      left: `${x}px`,
-                      top: `${y}px`,
-                      width: `${sqW}px`,
-                      height: `${sqH}px`,
-                      backgroundColor: bgFillColor || section.color,
-                      zIndex: 3,
-                    }} />
-                  );
-                })}
+                {mergeSquaresToRects(section.squares, gridPx).map((r, idx) => (
+                  <div key={idx} className="section-cell" style={{
+                    left: `${r.x}px`,
+                    top: `${r.y}px`,
+                    width: `${r.width}px`,
+                    height: `${r.height}px`,
+                    backgroundColor: bgFillColor || section.color,
+                    zIndex: 3,
+                  }} />
+                ))}
                 <div
                   className={`draggable-item${isSelected ? ' selected' : ''}`}
                   onMouseDown={(e) => {
