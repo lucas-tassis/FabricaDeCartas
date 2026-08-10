@@ -251,7 +251,12 @@ public class CardRenderService {
         float boxHeight = (float) colConfig.getHeight();
         float minFontSize = 4.0f;
 
-        List<String> lines = wrapText(text, font, fontSize, boxWidth);
+        double normRot = (colConfig.getRotation() % 360 + 360) % 360;
+        boolean is90or270 = Math.abs(normRot - 90) < 5 || Math.abs(normRot - 270) < 5;
+        float targetWidth = is90or270 ? boxHeight : boxWidth;
+        float targetHeight = is90or270 ? boxWidth : boxHeight;
+
+        List<String> lines = wrapText(text, font, fontSize, targetWidth);
         if (lines.isEmpty()) return;
 
         float leading = fontSize * 1.2f;
@@ -262,40 +267,19 @@ public class CardRenderService {
         float totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
         float maxLineWidth = getMaxLineWidth(lines, font, fontSize);
 
-        // Auto-scale font size down if text height exceeds boxHeight OR any line width exceeds boxWidth
-        while ((totalTextHeight > boxHeight || maxLineWidth > boxWidth) && fontSize > minFontSize) {
+        // Auto-scale font size down if text height exceeds targetHeight OR any line width exceeds targetWidth
+        while ((totalTextHeight > targetHeight || maxLineWidth > targetWidth) && fontSize > minFontSize) {
             fontSize -= 0.5f;
-            lines = wrapText(text, font, fontSize, boxWidth);
+            lines = wrapText(text, font, fontSize, targetWidth);
             leading = fontSize * 1.2f;
             singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
             totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
             maxLineWidth = getMaxLineWidth(lines, font, fontSize);
         }
 
-        float boxTopY = (float) (startY + template.getCardHeight() - colConfig.getY());
-        String vAlign = colConfig.getVAlign() == null ? "" : colConfig.getVAlign().toLowerCase();
-        float startYOffset = switch (vAlign) {
-            case "center" -> boxTopY - (boxHeight - totalTextHeight) / 2f - singleLineCapHeight;
-            case "bottom" -> boxTopY - boxHeight + totalTextHeight - singleLineCapHeight;
-            default       -> boxTopY - singleLineCapHeight;
-        };
-
         contentStream.saveGraphicsState();
 
-        boolean doRotate = Math.abs(colConfig.getRotation()) > 0.01;
-        if (doRotate) {
-            float cx = (float) (startX + colConfig.getX() + boxWidth / 2);
-            float cy = (float) (startY + template.getCardHeight() - colConfig.getY() - boxHeight / 2);
-            double theta = Math.toRadians(-colConfig.getRotation());
-            float cosT = (float) Math.cos(theta);
-            float sinT = (float) Math.sin(theta);
-            Matrix m = new Matrix(cosT, sinT, -sinT, cosT,
-                    cx - cx * cosT + cy * sinT,
-                    cy - cx * sinT - cy * cosT);
-            contentStream.transform(m);
-        }
-
-        // Clip text within section bounds
+        // 1. Clip text strictly within section bounds (in page coordinate space)
         double[][] squares = colConfig.getSquareRects();
         if (squares != null && squares.length > 0) {
             for (double[] sq : squares) {
@@ -310,7 +294,29 @@ public class CardRenderService {
         }
         contentStream.clip();
 
+        // 2. Apply rotation transform if needed
+        boolean doRotate = Math.abs(colConfig.getRotation()) > 0.01;
+        if (doRotate) {
+            float cx = (float) (startX + colConfig.getX() + boxWidth / 2);
+            float cy = (float) (startY + template.getCardHeight() - colConfig.getY() - boxHeight / 2);
+            double theta = Math.toRadians(-colConfig.getRotation());
+            float cosT = (float) Math.cos(theta);
+            float sinT = (float) Math.sin(theta);
+            Matrix m = new Matrix(cosT, sinT, -sinT, cosT,
+                    cx - cx * cosT + cy * sinT,
+                    cy - cx * sinT - cy * cosT);
+            contentStream.transform(m);
+        }
+
         contentStream.setNonStrokingColor(colorService.parseColor(colConfig.getColor()));
+
+        float boxTopY = (float) (startY + template.getCardHeight() - colConfig.getY());
+        String vAlign = colConfig.getVAlign() == null ? "" : colConfig.getVAlign().toLowerCase();
+        float startYOffset = switch (vAlign) {
+            case "center" -> boxTopY - (boxHeight - totalTextHeight) / 2f - singleLineCapHeight;
+            case "bottom" -> boxTopY - boxHeight + totalTextHeight - singleLineCapHeight;
+            default       -> boxTopY - singleLineCapHeight;
+        };
 
         String hAlign = colConfig.getTextAlign() == null ? "" : colConfig.getTextAlign().toLowerCase();
 
