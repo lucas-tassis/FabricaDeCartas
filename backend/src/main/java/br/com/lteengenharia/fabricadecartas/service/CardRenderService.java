@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -246,29 +247,28 @@ public class CardRenderService {
         text = fontSanitizer.sanitizeTextForFont(font, text);
         if (text.isEmpty()) return;
 
-        float textWidth = font.getStringWidth(text) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
-        float capHeight = (font.getFontDescriptor() != null)
-                ? font.getFontDescriptor().getCapHeight()
-                : 700f;
-        float textHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
         float boxWidth = (float) colConfig.getWidth();
         float boxHeight = (float) colConfig.getHeight();
 
-        float textX = (float) (startX + colConfig.getX());
-        String hAlign = colConfig.getTextAlign() == null ? "" : colConfig.getTextAlign().toLowerCase();
-        textX += switch (hAlign) {
-            case "center" -> (boxWidth - textWidth) / 2;
-            case "right"  -> boxWidth - textWidth;
-            default       -> 0;
-        };
+        List<String> lines = wrapText(text, font, fontSize, boxWidth);
+        if (lines.isEmpty()) return;
+
+        float leading = fontSize * 1.2f;
+        float capHeight = (font.getFontDescriptor() != null)
+                ? font.getFontDescriptor().getCapHeight()
+                : 700f;
+        float singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
+        float totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
 
         float boxTopY = (float) (startY + template.getCardHeight() - colConfig.getY());
         String vAlign = colConfig.getVAlign() == null ? "" : colConfig.getVAlign().toLowerCase();
-        float textY = switch (vAlign) {
-            case "center" -> boxTopY - (boxHeight - textHeight) / 2 - textHeight;
-            case "bottom" -> boxTopY - boxHeight;
-            default       -> boxTopY - textHeight;
+        float startYOffset = switch (vAlign) {
+            case "center" -> boxTopY - (boxHeight - totalTextHeight) / 2f - singleLineCapHeight;
+            case "bottom" -> boxTopY - boxHeight + totalTextHeight - singleLineCapHeight;
+            default       -> boxTopY - singleLineCapHeight;
         };
+
+        contentStream.saveGraphicsState();
 
         boolean doRotate = Math.abs(colConfig.getRotation()) > 0.01;
         if (doRotate) {
@@ -280,20 +280,82 @@ public class CardRenderService {
             Matrix m = new Matrix(cosT, sinT, -sinT, cosT,
                     cx - cx * cosT + cy * sinT,
                     cy - cx * sinT - cy * cosT);
-            contentStream.saveGraphicsState();
             contentStream.transform(m);
         }
 
-        contentStream.setNonStrokingColor(colorService.parseColor(colConfig.getColor()));
-        contentStream.beginText();
-        contentStream.setFont(font, fontSize);
-        contentStream.newLineAtOffset(textX, textY);
-        contentStream.showText(text);
-        contentStream.endText();
-
-        if (doRotate) {
-            contentStream.restoreGraphicsState();
+        // Clip text within section bounds
+        double[][] squares = colConfig.getSquareRects();
+        if (squares != null && squares.length > 0) {
+            for (double[] sq : squares) {
+                float sqX = (float) (startX + sq[0]);
+                float sqY = (float) (startY + template.getCardHeight() - sq[1] - sq[3]);
+                contentStream.addRect(sqX, sqY, (float) sq[2], (float) sq[3]);
+            }
+        } else {
+            float boxX = (float) (startX + colConfig.getX());
+            float boxY = (float) (startY + template.getCardHeight() - colConfig.getY() - boxHeight);
+            contentStream.addRect(boxX, boxY, boxWidth, boxHeight);
         }
+        contentStream.clip();
+
+        contentStream.setNonStrokingColor(colorService.parseColor(colConfig.getColor()));
+
+        String hAlign = colConfig.getTextAlign() == null ? "" : colConfig.getTextAlign().toLowerCase();
+
+        float currentLineY = startYOffset;
+        for (String line : lines) {
+            float lineWidth = font.getStringWidth(line) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
+            float lineX = (float) (startX + colConfig.getX());
+            lineX += switch (hAlign) {
+                case "center" -> (boxWidth - lineWidth) / 2f;
+                case "right"  -> boxWidth - lineWidth;
+                default       -> 0;
+            };
+
+            contentStream.beginText();
+            contentStream.setFont(font, fontSize);
+            contentStream.newLineAtOffset(lineX, currentLineY);
+            contentStream.showText(line);
+            contentStream.endText();
+
+            currentLineY -= leading;
+        }
+
+        contentStream.restoreGraphicsState();
+    }
+
+    private List<String> wrapText(String text, PDFont font, float fontSize, float maxWidth) throws Exception {
+        List<String> result = new ArrayList<>();
+        if (text == null || text.isBlank()) return result;
+
+        String[] paragraphs = text.split("\r?\n");
+        for (String paragraph : paragraphs) {
+            if (paragraph.isBlank()) {
+                result.add("");
+                continue;
+            }
+            String[] words = paragraph.split(" ");
+            StringBuilder currentLine = new StringBuilder();
+
+            for (String word : words) {
+                if (currentLine.length() == 0) {
+                    currentLine.append(word);
+                } else {
+                    String testLine = currentLine.toString() + " " + word;
+                    float width = font.getStringWidth(testLine) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
+                    if (width <= maxWidth) {
+                        currentLine.append(" ").append(word);
+                    } else {
+                        result.add(currentLine.toString());
+                        currentLine = new StringBuilder(word);
+                    }
+                }
+            }
+            if (currentLine.length() > 0) {
+                result.add(currentLine.toString());
+            }
+        }
+        return result;
     }
 
     public void drawCardBack(PDDocument document, PDPageContentStream contentStream,

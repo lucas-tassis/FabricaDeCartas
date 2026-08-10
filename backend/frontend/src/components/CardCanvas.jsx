@@ -321,7 +321,17 @@ function CardCanvas({
                   ) : colType === 'bordas' ? (
                     <div style={{ width: '100%', height: '100%', backgroundColor: bgFillColor }} />
                   ) : (
-                    <span>{isPreviewActive ? (rawVal || `[${linkedCol}]`) : (linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, ''))}</span>
+                    <span style={{
+                      wordBreak: 'break-word',
+                      whiteSpace: 'pre-wrap',
+                      overflow: 'hidden',
+                      width: '100%',
+                      maxHeight: '100%',
+                      lineHeight: 1.2,
+                      display: 'block',
+                    }}>
+                      {isPreviewActive ? (rawVal || `[${linkedCol}]`) : (linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, ''))}
+                    </span>
                   )}
                 </div>
 
