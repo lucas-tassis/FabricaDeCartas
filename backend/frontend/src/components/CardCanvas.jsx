@@ -220,7 +220,7 @@ function CardCanvas({
             );
           })}
 
-          {sections.map((section) => {
+          {sections.map((section, sectionIndex) => {
             const bounds = getSectionBounds(section, gridPx, canvasWidthPx, canvasHeightPx);
             const isSelected = activeSectionId === section.id;
             const linkedCol = section.linkedColumn;
@@ -256,7 +256,7 @@ function CardCanvas({
                     width: `${r.width}px`,
                     height: `${r.height}px`,
                     backgroundColor: bgFillColor || section.color,
-                    zIndex: 3,
+                    zIndex: sectionIndex * 2 + 3,
                   }} />
                 ))}
                 <div
@@ -273,7 +273,7 @@ function CardCanvas({
                   onContextMenu={(e) => { e.preventDefault(); onSectionClick(section.id); onContextMenu(e); }}
                   style={{
                     position: 'absolute',
-                    zIndex: isSelected ? 10 : 4,
+                    zIndex: isSelected ? 100 : (sectionIndex * 2 + 4),
                     clipPath: `url(#section-clip-${section.id})`,
                     left: `${bounds.minX}px`,
                     top: `${bounds.minY}px`,

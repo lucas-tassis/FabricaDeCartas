@@ -9,7 +9,8 @@ import SectionPropertiesControls from './sidebar/SectionPropertiesControls';
 function SidebarRight({
   template, setTemplate, gridSize, setGridSize, activeSection, updateSectionConfig,
   columnTypes, sections, saveHistory, columns, showBleedGuides, setShowBleedGuides,
-  snapToGrid, setSnapToGrid, showPreviewCard1, setShowPreviewCard1, firstRow
+  snapToGrid, setSnapToGrid, showPreviewCard1, setShowPreviewCard1, firstRow,
+  moveSectionUp, moveSectionDown, moveSectionToFront, moveSectionToBack
 }) {
   const { t } = useTranslation();
   const [systemFonts, setSystemFonts] = useState([]);
@@ -69,6 +70,10 @@ function SidebarRight({
         systemFonts={systemFonts}
         setSystemFonts={setSystemFonts}
         refreshFonts={refreshFonts}
+        moveSectionUp={moveSectionUp}
+        moveSectionDown={moveSectionDown}
+        moveSectionToFront={moveSectionToFront}
+        moveSectionToBack={moveSectionToBack}
       />
     </div>
   );

@@ -249,6 +249,7 @@ public class CardRenderService {
 
         float boxWidth = (float) colConfig.getWidth();
         float boxHeight = (float) colConfig.getHeight();
+        float minFontSize = 4.0f;
 
         List<String> lines = wrapText(text, font, fontSize, boxWidth);
         if (lines.isEmpty()) return;
@@ -259,6 +260,15 @@ public class CardRenderService {
                 : 700f;
         float singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
         float totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
+
+        // Auto-scale font size down if text exceeds section height
+        while (totalTextHeight > boxHeight && fontSize > minFontSize) {
+            fontSize -= 0.5f;
+            lines = wrapText(text, font, fontSize, boxWidth);
+            leading = fontSize * 1.2f;
+            singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
+            totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
+        }
 
         float boxTopY = (float) (startY + template.getCardHeight() - colConfig.getY());
         String vAlign = colConfig.getVAlign() == null ? "" : colConfig.getVAlign().toLowerCase();

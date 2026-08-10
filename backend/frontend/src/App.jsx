@@ -50,6 +50,7 @@ function App() {
   const {
     sections, setSections, activeSectionId, setActiveSectionId,
     activeSection, createSection, removeSection, updateSectionConfig, linkColumnToSection,
+    moveSectionUp, moveSectionDown, moveSectionToFront, moveSectionToBack,
     undo, redo, history, future, saveHistory,
   } = useSections();
 
@@ -384,12 +385,27 @@ function App() {
         {contextMenu && (
           <div className="context-menu" style={{ left: contextMenu.x, top: contextMenu.y }}>
             {contextMenu.sectionId ? (
-              <div className="menu-item" onClick={(e) => { e.stopPropagation(); handleRemoveSection(contextMenu.sectionId); }}>
-                {t('remove_section')}
-              </div>
+              <>
+                <div className="menu-item" onClick={(e) => { e.stopPropagation(); moveSectionToFront(contextMenu.sectionId); setContextMenu(null); }}>
+                  🔝 Trazer para o Topo
+                </div>
+                <div className="menu-item" onClick={(e) => { e.stopPropagation(); moveSectionUp(contextMenu.sectionId); setContextMenu(null); }}>
+                  ⬆️ Mover para Frente
+                </div>
+                <div className="menu-item" onClick={(e) => { e.stopPropagation(); moveSectionDown(contextMenu.sectionId); setContextMenu(null); }}>
+                  ⬇️ Mover para Trás
+                </div>
+                <div className="menu-item" onClick={(e) => { e.stopPropagation(); moveSectionToBack(contextMenu.sectionId); setContextMenu(null); }}>
+                  🔚 Enviar para o Fundo
+                </div>
+                <div className="menu-divider" style={{ borderTop: '1px solid var(--border-color)', margin: '4px 0' }} />
+                <div className="menu-item" onClick={(e) => { e.stopPropagation(); handleRemoveSection(contextMenu.sectionId); }}>
+                  🗑️ {t('remove_section')}
+                </div>
+              </>
             ) : (
               <div className="menu-item" onClick={(e) => { e.stopPropagation(); handleCreateSection(); }}>
-                {t('create_section')}
+                ✨ {t('create_section')}
               </div>
             )}
           </div>
@@ -455,6 +471,10 @@ function App() {
           showPreviewCard1={showPreviewCard1}
           setShowPreviewCard1={setShowPreviewCard1}
           firstRow={firstRow}
+          moveSectionUp={moveSectionUp}
+          moveSectionDown={moveSectionDown}
+          moveSectionToFront={moveSectionToFront}
+          moveSectionToBack={moveSectionToBack}
         />
       </main>
 

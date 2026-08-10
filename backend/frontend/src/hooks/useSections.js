@@ -115,6 +115,54 @@ export function useSections() {
     }));
   };
 
+  const moveSectionUp = useCallback((id) => {
+    setSections(prev => {
+      const idx = prev.findIndex(s => s.id === id);
+      if (idx < 0 || idx >= prev.length - 1) return prev;
+      saveHistory(prev);
+      const next = [...prev];
+      const temp = next[idx];
+      next[idx] = next[idx + 1];
+      next[idx + 1] = temp;
+      return next;
+    });
+  }, [saveHistory]);
+
+  const moveSectionDown = useCallback((id) => {
+    setSections(prev => {
+      const idx = prev.findIndex(s => s.id === id);
+      if (idx <= 0) return prev;
+      saveHistory(prev);
+      const next = [...prev];
+      const temp = next[idx];
+      next[idx] = next[idx - 1];
+      next[idx - 1] = temp;
+      return next;
+    });
+  }, [saveHistory]);
+
+  const moveSectionToFront = useCallback((id) => {
+    setSections(prev => {
+      const idx = prev.findIndex(s => s.id === id);
+      if (idx < 0 || idx === prev.length - 1) return prev;
+      saveHistory(prev);
+      const target = prev[idx];
+      const rest = prev.filter(s => s.id !== id);
+      return [...rest, target];
+    });
+  }, [saveHistory]);
+
+  const moveSectionToBack = useCallback((id) => {
+    setSections(prev => {
+      const idx = prev.findIndex(s => s.id === id);
+      if (idx <= 0) return prev;
+      saveHistory(prev);
+      const target = prev[idx];
+      const rest = prev.filter(s => s.id !== id);
+      return [target, ...rest];
+    });
+  }, [saveHistory]);
+
   const activeSection = sections.find(s => s.id === activeSectionId);
 
   return {
@@ -122,6 +170,7 @@ export function useSections() {
     activeSectionId, setActiveSectionId,
     activeSection,
     createSection, removeSection, updateSectionConfig, linkColumnToSection,
+    moveSectionUp, moveSectionDown, moveSectionToFront, moveSectionToBack,
     undo, redo, history, future, saveHistory,
   };
 }

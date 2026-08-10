@@ -13,7 +13,11 @@ function SectionPropertiesControls({
   saveHistory,
   systemFonts,
   setSystemFonts,
-  refreshFonts
+  refreshFonts,
+  moveSectionUp,
+  moveSectionDown,
+  moveSectionToFront,
+  moveSectionToBack,
 }) {
   const { t } = useTranslation();
   const fontInputRef = useRef(null);
@@ -26,6 +30,9 @@ function SectionPropertiesControls({
       </div>
     );
   }
+
+  const sectionIndex = sections ? sections.findIndex(s => s.id === activeSection.id) : 0;
+  const totalSections = sections ? sections.length : 1;
 
   const effectiveType = activeSection.linkedColumn
     ? columnTypes?.[activeSection.linkedColumn] || 'text'
@@ -85,6 +92,55 @@ function SectionPropertiesControls({
     <div className="sidebar-group">
       <div className="props-divider" />
       <h3>{activeSection.name}</h3>
+
+      {/* Camadas (Ordem de Sobreposição) */}
+      <div className="control-group" style={{ marginBottom: '0.8rem', paddingBottom: '0.6rem', borderBottom: '1px solid var(--border-color)' }}>
+        <label>Camada ({sectionIndex + 1} / {totalSections})</label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', marginBottom: '4px' }}>
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ fontSize: '0.75rem', padding: '0.25rem' }}
+            disabled={sectionIndex >= totalSections - 1}
+            onClick={() => moveSectionUp && moveSectionUp(activeSection.id)}
+            title="Subir Camada"
+          >
+            ⬆️ Subir
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ fontSize: '0.75rem', padding: '0.25rem' }}
+            disabled={sectionIndex <= 0}
+            onClick={() => moveSectionDown && moveSectionDown(activeSection.id)}
+            title="Descer Camada"
+          >
+            ⬇️ Descer
+          </button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ fontSize: '0.75rem', padding: '0.25rem' }}
+            disabled={sectionIndex >= totalSections - 1}
+            onClick={() => moveSectionToFront && moveSectionToFront(activeSection.id)}
+            title="Trazer para o Topo"
+          >
+            🔝 Topo
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ fontSize: '0.75rem', padding: '0.25rem' }}
+            disabled={sectionIndex <= 0}
+            onClick={() => moveSectionToBack && moveSectionToBack(activeSection.id)}
+            title="Enviar ao Fundo"
+          >
+            🔚 Fundo
+          </button>
+        </div>
+      </div>
 
       <div className="control-group">
         <label>{t('section_bg_color')}</label>
