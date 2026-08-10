@@ -260,14 +260,16 @@ public class CardRenderService {
                 : 700f;
         float singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
         float totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
+        float maxLineWidth = getMaxLineWidth(lines, font, fontSize);
 
-        // Auto-scale font size down if text exceeds section height
-        while (totalTextHeight > boxHeight && fontSize > minFontSize) {
+        // Auto-scale font size down if text height exceeds boxHeight OR any line width exceeds boxWidth
+        while ((totalTextHeight > boxHeight || maxLineWidth > boxWidth) && fontSize > minFontSize) {
             fontSize -= 0.5f;
             lines = wrapText(text, font, fontSize, boxWidth);
             leading = fontSize * 1.2f;
             singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
             totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
+            maxLineWidth = getMaxLineWidth(lines, font, fontSize);
         }
 
         float boxTopY = (float) (startY + template.getCardHeight() - colConfig.getY());
@@ -366,6 +368,15 @@ public class CardRenderService {
             }
         }
         return result;
+    }
+
+    private float getMaxLineWidth(List<String> lines, PDFont font, float fontSize) throws Exception {
+        float maxW = 0f;
+        for (String line : lines) {
+            float w = font.getStringWidth(line) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
+            if (w > maxW) maxW = w;
+        }
+        return maxW;
     }
 
     public void drawCardBack(PDDocument document, PDPageContentStream contentStream,

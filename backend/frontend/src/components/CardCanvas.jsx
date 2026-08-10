@@ -247,6 +247,34 @@ function CardCanvas({
               }
             }
 
+            let fontPt = safeParse(section.fontSize, 12);
+            const textStr = isPreviewActive ? (rawVal || `[${linkedCol}]`) : (linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, ''));
+            if (colType !== 'image' && colType !== 'bordas' && textStr && bounds.width > 0 && bounds.height > 0) {
+              const fontPx = fontPt * (MM_TO_PX / MM_TO_PT);
+              const containerWidthPx = bounds.width;
+              const containerHeightPx = bounds.height;
+
+              // Check max word length vs width
+              const words = textStr.split(/\s+/);
+              let maxWordLen = 1;
+              words.forEach(w => { if (w.length > maxWordLen) maxWordLen = w.length; });
+              const estimatedMaxWordPx = maxWordLen * fontPx * 0.58;
+
+              // Check total text block height
+              const approxCharsPerLine = Math.max(1, Math.floor(containerWidthPx / (fontPx * 0.58)));
+              const estimatedLines = Math.max(1, Math.ceil(textStr.length / approxCharsPerLine));
+              const estimatedTotalHeightPx = estimatedLines * fontPx * 1.2;
+
+              let scaleFactor = 1.0;
+              if (estimatedMaxWordPx > containerWidthPx) {
+                scaleFactor = Math.min(scaleFactor, containerWidthPx / estimatedMaxWordPx);
+              }
+              if (estimatedTotalHeightPx > containerHeightPx) {
+                scaleFactor = Math.min(scaleFactor, containerHeightPx / estimatedTotalHeightPx);
+              }
+              fontPt = Math.max(4, fontPt * scaleFactor);
+            }
+
             return (
               <Fragment key={section.id}>
                 {mergeSquaresToRects(section.squares, gridPx).map((r, idx) => (
@@ -285,7 +313,7 @@ function CardCanvas({
                     alignItems: linkedCol
                       ? (section.vAlign === 'top' ? 'flex-start' : section.vAlign === 'bottom' ? 'flex-end' : 'center')
                       : 'center',
-                    fontSize: `${safeParse(section.fontSize, 12) * (MM_TO_PX / MM_TO_PT)}px`,
+                    fontSize: `${fontPt * (MM_TO_PX / MM_TO_PT)}px`,
                     fontFamily: section.fontFamily || 'Helvetica, sans-serif',
                     color: section.fontColor || '#000000',
                     fontWeight: section.bold ? 'bold' : 'normal',
@@ -330,7 +358,7 @@ function CardCanvas({
                       lineHeight: 1.2,
                       display: 'block',
                     }}>
-                      {isPreviewActive ? (rawVal || `[${linkedCol}]`) : (linkedCol ? `[${linkedCol}]` : section.name.replace(/\D+/g, ''))}
+                      {textStr}
                     </span>
                   )}
                 </div>
