@@ -1,220 +1,239 @@
-# 🎴 Manual do Usuário Detalhado - Fábrica de Cartas
+# 🎴 Manual Completo do Usuário — Fábrica de Cartas
 
-Bem-vindo ao **Guia Completo da Fábrica de Cartas**! Este manual foi elaborado para fornecer explicações aprofundadas sobre todas as funcionalidades, desde a preparação de planilhas Excel até a impressão gráfica de alta qualidade.
-
----
-
-## 📑 Sumário Detalhado
-1. [Conceitos Fundamentais](#1-conceitos-fundamentais)
-2. [Estrutura da Planilha Excel (.xlsx)](#2-estrutura-da-planilha-excel-xlsx)
-3. [Entendendo a Interface Visual](#3-entendendo-a-interface-visual)
-4. [Tipos de Colunas e Como Funcionam](#4-tipos-de-colunas-e-como-funcionam)
-5. [Editor de Layout e Manipulação de Seções](#5-editor-de-layout-e-manipulação-de-seções)
-6. [Estilização Avançada (Texto e Imagem)](#6-estilização-avançada-texto-e-imagem)
-7. [Configuração do Verso da Carta e Impressão Duplex](#7-configuração-do-verso-da-carta-e-impressão-duplex)
-8. [Painel de Imagens Locais (Assets)](#8-painel-de-imagens-locais-assets)
-9. [Exemplo Prático Explicado (Passo a Passo)](#9-exemplo-prático-explicado-passo-a-passo)
-10. [Exportação, Impressão e Corte Gráfico](#10-exportação-impressão-e-corte-gráfico)
-11. [Solução de Problemas (Troubleshooting)](#11-solução-de-problemas-troubleshooting)
+Bem-vindo à **Fábrica de Cartas**! Este é o guia definitivo passo a passo. Ele foi projetado para que **qualquer pessoa — mesmo quem nunca abriu o site ou criou um jogo de cartas antes — consiga entender e usar todas as funcionalidades do sistema com facilidade**.
 
 ---
 
-## 1. Conceitos Fundamentais
-
-A **Fábrica de Cartas** é um gerador de mídia baseado em modelos (templates). Ela combina dois elementos essenciais:
-1. **Dados (Planilha Excel)**: Onde ficam os textos, atributos, nomes de arquivo de imagem e cores específicas de cada carta.
-2. **Modelo (Layout)**: Onde você desenha visualmente *onde* e *como* cada dado será exibido na superfície da carta.
-
-A ferramenta gera automaticamente **N cartas** a partir das **N linhas** da sua planilha.
-
----
-
-## 2. Estrutura da Planilha Excel (.xlsx)
-
-Para que a aplicação leia seus dados sem erros, siga estas regras simples na construção do seu arquivo `.xlsx`:
-
-### Regras do Arquivo:
-* **Linha 1 (Cabeçalhos)**: Deve conter os nomes das colunas (ex: `Nome`, `Ataque`, `Defesa`, `Descricao`, `Foto`, `CorFundo`).
-* **Linhas 2 em diante (Cartas)**: Cada linha representa uma carta individual.
-* **Formatação de Dados por Coluna**:
-  * **Texto**: Digite livremente qualquer texto ou número (ex: *"Mago Negro"*, *"3"*, *"Causa 5 de dano em área"*).
-  * **Caminhos de Imagem**: Aceita:
-    * URLs públicas na web (`https://site.com/imagens/dragao.jpg`).
-    * Nomes de arquivos previamente carregados na aba de Assets (`dragao.jpg`).
-  * **Cores**: Aceita códigos Hexadecimais (`#FF0000` para vermelho, `#0088FF` para azul) ou nomes de cores padrão CSS (`red`, `blue`, `black`, `gold`).
-
-#### Exemplo de Tabela Excel:
-| Nome | Tipo | Ataque | Defesa | Foto | CorFundo |
-| :--- | :--- | :---: | :---: | :--- | :--- |
-| Dragão de Fogo | Monstro | 8 | 5 | dragao.jpg | #FF4444 |
-| Escudo Real | Item | 0 | 4 | escudo.png | #4488FF |
-| Poção Solar | Magia | 0 | 0 | pocao.jpg | #FFCC00 |
+## 📑 Sumário Rápidamente Navegável
+1. [O que é a Fábrica de Cartas?](#1-o-que-é-a-fábrica-de-cartas)
+2. [Passo 1: Preparando a sua Planilha Excel (.xlsx)](#2-passo-1-preparando-a-sua-planilha-excel-xlsx)
+3. [Passo 2: Conhecendo a Tela e a Interface](#3-passo-2-conhecendo-a-tela-e-a-interface)
+4. [Passo 3: Importando a Planilha no Site](#4-passo-3-importando-a-planilha-no-site)
+5. [Passo 4: Definindo os Tipos de Coluna](#5-passo-4-definindo-os-tipos-de-coluna)
+6. [Passo 5: Desenhando Seções na Carta (Formatos Retos e Irregulares)](#6-passo-5-desenhando-seções-na-carta-formatos-retos-e-irregulares)
+7. [Passo 6: Vinculando Seções às Colunas da Planilha](#7-passo-6-vinculando-seções-às-colunas-da-planilha)
+8. [Passo 7: Ajustes de Texto e Ajuste Automático de Fonte (Auto-Fit)](#8-passo-7-ajustes-de-texto-e-ajuste-automático-de-fonte-auto-fit)
+9. [Passo 8: Ajustes de Imagens e Assets Locais](#9-passo-8-ajustes-de-imagens-e-assets-locais)
+10. [Passo 9: Imagem de Fundo da Carta (Frente)](#10-passo-9-imagem-de-fundo-da-carta-frente)
+11. [Passo 10: Gerenciamento de Camadas (Clique Direito e Botões)](#11-passo-10-gerenciamento-de-camadas-clique-direito-e-botões)
+12. [Passo 11: Configurando o Verso das Cartas](#12-passo-11-configurando-o-verso-das-cartas)
+13. [Passo 12: Salvar e Carregar Layouts (Projetos .json)](#13-passo-12-salvar-e-carregar-layouts-projetos-json)
+14. [Passo 13: Exportação Final (PDF ou ZIP de Imagens)](#14-passo-13-exportação-final-pdf-ou-zip-de-imagens)
+15. [Perguntas Frequentes e Dicas de Impressão](#15-perguntas-frequentes-e-dicas-de-impressão)
 
 ---
 
-## 3. Entendendo a Interface Visual
+## 1. O que é a Fábrica de Cartas?
 
-A tela é organizada em 3 grandes zonas funcionais:
+A **Fábrica de Cartas** é uma ferramenta web que automatiza a criação de jogos de cartas (board games, card games, flashcards educativos, protótipos de RPG, etc.).
+
+Em vez de criar 50 ou 100 cartas uma a uma no Photoshop ou Canva, você apenas:
+1. Digita os dados das suas cartas em uma **planilha do Excel** (como nomes, ataques, descrições e nomes de imagens).
+2. Desenha o modelo visual (o **Layout**) na tela uma única vez.
+3. O site gera **todas as cartas da planilha automaticamente** prontas para impressão!
+
+---
+
+## 2. Passo 1: Preparando a sua Planilha Excel (.xlsx)
+
+Crie um arquivo comum no Excel (formato `.xlsx`) ou Google Planilhas.
+
+### 📜 Como organizar as colunas:
+* **Linha 1 (Cabeçalhos)**: Digite o nome de cada informação que sua carta terá.
+  - *Exemplo*: `Nome`, `Tipo`, `Pontos`, `Descricao`, `Arte`, `CorMoldura`.
+* **Linhas 2 em diante (Suas Cartas)**: Cada linha será uma carta diferente gerada no final.
+
+#### 💡 Exemplo de Planilha de Exemplo:
+| Nome | Tipo | Pontos | Descricao | Arte | CorMoldura |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| Mago de Fogo | Monstro | 5 | Lança uma bola de fogo que causa dano em área. | mago.jpg | #FF4444 |
+| Poção de Cura | Item | 2 | Restaura 10 pontos de vida do jogador. | pocao.png | #44FF44 |
+| Escudo de Aço | Equipamento | 4 | Bloqueia 5 de dano de ataques físicos. | escudo.jpg | #4488FF |
+
+> **Dica de Imagens na Planilha**: Na coluna de imagens (ex: `Arte`), você pode digitar o nome do arquivo que enviará no site (ex: `mago.jpg`) ou colar um link público da internet (`https://site.com/foto.jpg`).
+
+---
+
+## 3. Passo 2: Conhecendo a Tela e a Interface
+
+Ao abrir o site, você verá 3 partes principais:
 
 ```
-+------------------+----------------------------------+------------------+
-| PAINEL ESQUERDO  |          ÁREA CENTRAL            |  PAINEL DIREITO  |
-|                  |          (CANVAS EDITOR)         |                  |
-| 📂 Upload Excel  |                                  | 📏 Tamanho Carta |
-| 📋 Lista Colunas |       [ Visualização da ]        | 🔳 Tamanho Grade |
-| 🔀 Tipo Dado     |       [  Carta com Zoom ]        | 🔤 Fontes/Cores  |
-| 🧱 Camadas       |                                  | 🖼️ Fit de Imagem |
-|                  |  🖼️ Gerenciador de Assets        | 🃏 Verso Carta   |
-+------------------+----------------------------------+------------------+
++---------------------+-----------------------------------+---------------------+
+| 1. DADOS BASE       | CANVA CENTRAL (ÁREA DE DESENHO)   | 3. PROPRIEDADES     |
+| (Painel Esquerdo)   |                                   | (Painel Direito)    |
+|                     | [ Controles de Zoom e Pan ]       |                     |
+| 📂 Carregar Excel   | [ Desenho da Carta na Grade ]     | 📏 Tamanho Carta    |
+| 📋 Lista Colunas    |                                   | 🔳 Tamanho Grade    |
+| 🎨 Tipos de Dados   | 🖼️ Barra de Assets (Imagens)     | 🔤 Texto e Fonte    |
+| 🔗 Vinculação       |                                   | 🃏 Verso da Carta   |
++---------------------+-----------------------------------+---------------------+
 ```
 
----
-
-## 4. Tipos de Colunas e Como Funcionam
-
-Ao carregar a planilha, você deve atribuir um **Tipo** para cada coluna no painel esquerdo:
-
-### 1. `Texto` (Padrão)
-* Escreve o texto da célula na posição da seção.
-* Ajusta automaticamente a quebra de linha se o texto for longo.
-* Permite controle completo de fonte, cor, alinhamento e rotação.
-
-### 2. `Imagem`
-* Carrega e desenha a imagem indicada na célula.
-* Possui opções avançadas de redimensionamento (*Smart Fit*, *Cover*, *Contain*).
-* Suporta conversão de Espaço de Cor para **CMYK** (ideal para impressoras gráficas).
-
-### 3. `Cor`
-* Lê o código hexadecimal da célula e preenche o fundo da seção com aquela cor.
-* Útil para dinamicamente alterar a cor de molduras, barras de atributos ou fundos de acordo com a classe/elemento da carta.
-
-### 4. `Bordas`
-* Desenha padrões geométricos de borda ou molduras personalizadas com base nos quadrados selecionados na grade.
+- **Painel Esquerdo (1. Dados Base)**: Onde você carrega o Excel e gerencia as colunas da planilha.
+- **Canva Central (Desenho)**: A mesa de trabalho onde você desenha e visualiza a carta em tempo real.
+- **Painel Direito (3. Propriedades)**: Onde você ajusta tamanhos, cores, fontes, rotação, imagens de fundo e versos.
 
 ---
 
-## 5. Editor de Layout e Manipulação de Seções
+## 4. Passo 3: Importando a Planilha no Site
 
-### Como criar uma seção:
-1. No Canvas central, clique e segure com o botão esquerdo para selecionar a área desejada da grade.
-2. Clique com o **botão direito** sobre os blocos destacados.
-3. Clique em **"Criar Seção"**.
-
-### Camadas e Sobreposição (Z-Index / Render Order):
-* As seções são renderizadas na ordem em que aparecem no **Painel Esquerdo**.
-* **Reordenar Camadas**: Clique e arraste as colunas para cima ou para baixo no painel esquerdo.
-  * *Colunas no topo*: Ficam ao fundo (Background).
-  * *Colunas na base*: Ficam na frente (Foreground/Sobreposição).
+1. No **Painel Esquerdo** (1. Dados Base), clique no grande quadrado pontilhado: **`Carregar Planilha (.xlsx ou .csv)`**.
+2. Escolha o seu arquivo Excel no computador.
+3. Assim que o arquivo for carregado:
+   - A lista de colunas da sua planilha aparecerá abaixo.
+   - O contador **Total de cartas** mostrará quantas cartas foram identificadas.
+   - A carta no centro da tela entrará no modo **Pré-visualizar (Carta 1)**, mostrando os dados reais da primeira linha da sua planilha!
 
 ---
 
-## 6. Estilização Avançada (Texto e Imagem)
+## 5. Passo 4: Definindo os Tipos de Coluna
 
-Quando uma seção está selecionada, o **Painel Direito** expõe os seguintes ajustes:
+Abaixo do nome de cada coluna no painel esquerdo, você encontrará 3 botões para indicar o que aquele dado representa:
 
-### 🔤 Ajustes de Texto:
-* **Fonte**: Escolha entre fontes vetoriais limpas (`Helvetica`, `Arial`, `Times New Roman`, `Courier`).
-* **Tamanho**: Ajuste o tamanho em pontos (`pt`).
-* **Negrito**: Ative o botão **B** para destacar títulos e valores.
-* **Alinhamentos**:
-  * *Horizontal*: Esquerda | Centro | Direita.
-  * *Vertical*: Topo | Centro | Base.
-* **Rotação**: Rotação em 90°, 180° ou 270° (excelente para cartas com textos laterais ou invertidos).
-
-### 🖼️ Ajustes de Imagem:
-* **Modo de Encaixe (Fit)**:
-  * `Smart`: Encaixe inteligente que preserva a proporção sem distorção.
-  * `Cover`: Preenche toda a seção (pode recortar as bordas da imagem).
-  * `Contain`: Exibe 100% da imagem (pode gerar margens transparentes).
-* **Filtros Gráficos**:
-  * **Brilho (%)**: De 0% (escuro) a 200% (super exposto).
-  * **Contraste (%)**: Ajuste para destacar detalhes de ilustrações.
-* **Espaço de Cor**: Escolha entre **RGB** (Telas/Web) ou **CMYK** (Impressão Profissional).
-
-### 👁️ Pré-visualização em Tempo Real (Carta 1)
-Ao enviar a sua planilha Excel, a Fábrica de Cartas ativa automaticamente o modo de **Pré-visualização em Tempo Real**:
-1. **Dados Reais**: As seções vinculadas exibem instantaneamente os textos, cores e imagens referentes à **primeira carta da sua planilha**.
-2. **Edição Live (WYSIWYG)**: À medida que você altera o tamanho da fonte, família tipográfica, cor, alinhamento, rotação, ajustes de imagem (brilho/contraste) ou dimensões da seção, o Canvas se atualiza **em tempo real**!
-3. **Alternador de Modo**: No canto superior esquerdo do Canvas, você pode alternar entre:
-   - **`👁️ Pré-visualizar (Carta 1)`**: Exibe a arte final da primeira carta com os dados reais preenchidos.
-   - **`📝 Modo Estrutura [Colunas]`**: Exibe os rótulos genéricos das colunas para facilitar o desenho técnico das seções.
-
-### 🖼️ Imagem de Fundo da Carta (Frente)
-Você pode adicionar uma imagem de fundo que cobrirá toda a superfície frontal da carta, ficando situada **atrás de todas as seções, textos e cores**:
-1. No **Painel Direito** (3. Propriedades), localize a seção **`Imagem de Fundo (Frente)`**.
-2. Clique no botão **`+ Enviar Imagem de Fundo`** (ou selecione uma imagem já enviada na lista).
-3. Ajuste o modo de exibição:
-   - **Cover (Cobre tudo)**: Preenche toda a carta proporcionalmente (recomendado para artes de fundo).
-   - **Contain (Contido)**: Mantém a proporção exata da imagem sem cortar nada.
-   - **Fill (Preencher)**: Estica a imagem para ocupar exatamente a largura e altura.
-4. **Camadas**: Todas as seções de texto, cores e imagens de colunas continuarão posicionadas por cima dessa imagem de fundo, tanto na pré-visualização ao vivo quanto na geração do PDF!
-
-### 🔤 Fontes Personalizadas (.ttf / .otf) e Fontes do Computador
-A Fábrica de Cartas suporta o uso de **fontes personalizadas** no seu design:
-1. **Enviar arquivo de fonte (.ttf / .otf)**:
-   - No **Painel Direito**, ao selecionar uma seção de texto, clique no botão **`+ Enviar Fonte (.ttf / .otf)`**.
-   - Selecione o arquivo de fonte no seu computador.
-   - O arquivo será registrado no servidor para a renderização vetorial no PDF e carregado dinamicamente no navegador para pré-visualização instantânea no Canvas!
-2. **Buscar fontes do computador (Navegadores Chrome/Edge)**:
-   - Se estiver usando o Chrome ou Edge, clique no botão **`🔍 Buscar fontes do meu computador`**.
-   - O navegador solicitará permissão e listará automaticamente todas as famílias de fontes instaladas no seu sistema operacional!
-
-### 🔄 Rotação de 90° na Impressão (Otimização de Espaço)
-Se você criar um design de carta na **horizontal** (ex: *88.9 mm de largura por 63.5 mm de altura*), é possível otimizar a distribuição no papel A4 ativando a rotação de 90°:
-1. No **Painel Direito** (Propriedades), marque a caixa de seleção **"Girar 90° no PDF (Otimizar Impressão)"**.
-2. Ao gerar o PDF, o motor de layout girará cada carta em 90° automaticamente antes de distribuí-las na folha.
-3. Isso recalcula o encaixe para caber mais cartas por página (ex: de 8 cartas para **9 cartas por folha A4**).
+- **Texto** (Padrão): Use para nomes, descrições, números, atributos e títulos.
+- **Imagem**: Use para colunas que contêm nomes de arquivos de imagem ou links de fotos.
+- **Cor**: Use para colunas que contêm códigos de cores (ex: `#FF0000`) para mudar a cor de fundos ou molduras dinamicamente a cada carta.
 
 ---
 
-## 7. Configuração do Verso da Carta e Impressão Duplex
+## 6. Passo 5: Desenhando Seções na Carta (Formatos Retos e Irregulares)
 
-No painel direito, expanda a aba **Verso da Carta**:
+As **Seções** são as caixas na carta onde os textos, imagens ou cores serão exibidos.
 
-1. **Ativar Verso**: Selecione `Cor Sólida` ou `Imagem Única`.
-2. **Duplex / Alinhamento de Impressão**:
-   * **Frente e Verso Separados**: Gera as frentes primeiro e os versos nas páginas seguintes.
-   * **Duplex Espelhado (Frente e Verso na Mesma Folha)**: Ao imprimir em folha dupla face ou ao virar a folha na impressora, a coluna da direita do verso alinha-se perfeitamente com a coluna da esquerda da frente!
-
----
-
-## 8. Painel de Imagens Locais (Assets)
-
-Abaixo do Canvas central fica a barra de **Assets de Imagem**:
-* Você pode arrastar imagens do seu computador para esta barra.
-* Ao colocar o nome do arquivo (ex: `icone_espada.png`) na sua planilha Excel, a Fábrica de Cartas buscará a imagem diretamente desses assets carregados, sem precisar hospedá-la na internet!
+### 📐 Como criar uma nova seção:
+1. No **Canva Central**, a carta é dividida em uma grade (grid).
+2. Clique com o botão esquerdo do mouse e **arraste para selecionar os quadradinhos da grade** onde deseja posicionar o elemento.
+3. Você pode desenhar formatos tradicionais (retângulos) ou **formas irregulares em "L", "T", escadas ou blocos customizados**!
+4. Clique com o **botão direito do mouse** sobre a área selecionada na grade.
+5. Selecione a opção **`✨ Criar Seção`**.
+6. Uma nova seção transparente surgirá exatamente na área desenhada!
 
 ---
 
-## 9. Exemplo Prático Explicado (Passo a Passo)
+## 7. Passo 6: Vinculando Seções às Colunas da Planilha
 
-Vamos criar um jogo de cartas de batalhas:
-
-1. **Prepare a Planilha**: Crie `cartas.xlsx` com as colunas `Nome`, `Ataque`, `Ilustracao` e `CorTipo`.
-2. **Faça o Upload**: Importe o arquivo na Fábrica de Cartas.
-3. **Crie as Seções**:
-   - Seção 1 (Fundo): Cubra a carta inteira -> Vincule com `CorTipo` (Tipo: Cor).
-   - Seção 2 (Ilustração): Selecione o centro da carta -> Vincule com `Ilustracao` (Tipo: Imagem, Fit: Cover).
-   - Seção 3 (Título): Selecione o topo da carta -> Vincule com `Nome` (Tipo: Texto, Fonte: Helvetica, Bold, Tam: 16pt, Alinhar: Centro).
-   - Seção 4 (Ataque): Selecione o canto inferior -> Vincule com `Ataque` (Tipo: Texto, Tam: 20pt, Cor: Vermelho).
-4. **Exporte**: Escolha **PDF** e clique em **Gerar Cartas**.
+Para que a seção exiba a informação da sua planilha:
+1. No **Painel Esquerdo**, encontre a coluna desejada (ex: `Nome`).
+2. Abra o menu dropdown ao lado dela (**`Seções...`**).
+3. Selecione a seção que você acabou de criar (ex: `Seção 1`).
+4. Pronto! Instantaneamente o texto ou imagem da planilha aparecerá dentro da seção no Canva central!
 
 ---
 
-## 10. Exportação, Impressão e Corte Gráfico
+## 8. Passo 7: Ajustes de Texto e Ajuste Automático de Fonte (Auto-Fit)
 
-### Dicas para Impressão Perfeita:
-* **Sangria (Bleed Guides)**: Ative as guias de sangria no painel direito. Certifique-se de que as imagens de fundo ultrapassem ligeiramente a linha vermelha de corte para que não apareçam fiapos brancos ao cortar a carta com guilhotina ou tesoura.
-* **Papel Recomendado**: Para protótipos de cartas, utilize papéis de gramatura alta (ex: **Offset ou Couché 250g/m² a 300g/m²**).
-* **Impressão sem Escala**: Ao abrir o PDF gerado no seu leitor de PDF (ex: Adobe Acrobat), certifique-se de selecionar a opção **"Tamanho Real" (100%)** nas configurações de impressão para manter os tamanhos em milímetros exatos.
+Ao clicar sobre qualquer seção de texto no Canva (ou selecioná-la no painel), o **Painel Direito (3. Propriedades)** abrirá os controles do elemento:
+
+### 🔤 Recursos de Texto:
+- **Cor de Fundo da Seção**: Por padrão, novas seções nascem **transparentes** (sem fundo) para não tampar a arte da carta. Se desejar, escolha uma cor no seletor.
+- **Fonte (Tipografia)**: Escolha entre fontes padrão (`Helvetica`, `Times`, `Courier`) ou use os botões **`+ Enviar Fonte (.ttf/.otf)`** ou **`🔍 Buscar fontes do meu computador`** para usar qualquer fonte instalada no seu Windows!
+- **Tamanho da Fonte (pt)**: Escolha o tamanho base do texto.
+- **Alinhamentos**:
+  - *Horizontal*: Esquerda | Centro | Direita.
+  - *Vertical*: Topo | Meio | Fundo.
+- **Rotação**: Digite um ângulo em graus (ex: `90` ou `270`) para girar o texto de lado ou de ponta-cabeça.
+
+### 🧠 Ajuste Automático Inteligente de Fonte (Auto-Fit):
+Você não precisa se preocupar com textos longos ou palavras grandes (ex: *"eletrônico"*, *"mamífero"*, *"Jogo de Tabuleiro"*)!
+- **Quebra de Linha**: Textos longos quebram linhas automaticamente para preencher a largura da seção.
+- **Redução Automática de Fonte**: Se o texto ou palavra for maior que a área desenhada, o sistema **reduz automaticamente o tamanho da fonte** até que o conteúdo caiba 100% dentro da seção!
+- **Tamanho Fixo da Seção**: A seção **nunca altera o seu tamanho desenhado** e **nunca vaza para fora** ou para outras cartas.
 
 ---
 
-## 11. Solução de Problemas (Troubleshooting)
+## 9. Passo 8: Ajustes de Imagens e Assets Locais
 
-| Problema | Causa Provável | Solução |
-| :--- | :--- | :--- |
-| **A imagem não aparece na carta** | Nome do arquivo ou URL incorreta na planilha | Verifique se o nome do arquivo no Excel bate exatamente com o nome da imagem na aba de Assets ou se a URL é válida. |
-| **O texto está cortando** | Seção muito pequena ou fonte muito grande | Redimensione a seção puxando as alças no Canvas ou reduza o tamanho da fonte no painel direito. |
-| **Elemento cobrindo o outro** | Ordem das camadas incorreta | No painel esquerdo, arraste a coluna do elemento que deve ficar por cima para o final da lista. |
-| **O PDF impresso ficou menor/maior** | Escala da impressora ajustada para "Ajustar à página" | Na janela de impressão do seu computador, mude de "Ajustar" para "Tamanho Real (100%)". |
+Quando uma seção está vinculada a uma coluna de **Imagem**:
+
+### 🖼️ Gerenciador de Imagens Locais (Barra de Assets):
+- Na parte inferior do Canva central fica a barra **Imagens (Assets)**.
+- Clique em **`+ Enviar Imagens`** e selecione todas as fotos do seu computador de uma vez (ex: `mago.jpg`, `pocao.png`, `escudo.jpg`).
+- Na sua planilha Excel, basta que o texto da célula seja o nome exato do arquivo (ex: `mago.jpg`).
+
+### 📐 Encaixe da Imagem (Image Fit):
+ No Painel Direito, escolha como a imagem deve se ajustar dentro da seção:
+- **Smart (Inteligente)**: Preserva a proporção da imagem sem distorcer.
+- **Cover (Cobre tudo)**: Preenche 100% da seção (recorta excessos das pontas se necessário).
+- **Contain (Contido)**: Garante que 100% da imagem seja visível sem cortes.
+- **Fill (Preencher)**: Estica a imagem para preencher toda a largura e altura.
+- **Filtros de Imagem**: Ajuste barras de **Brilho (%)** e **Contraste (%)** em tempo real.
+
+---
+
+## 10. Passo 9: Imagem de Fundo da Carta (Frente)
+
+Se você desenhou uma moldura metálica, textura de pergaminho ou arte de fundo completa para a sua carta:
+
+1. No **Painel Direito** (3. Propriedades), localize o bloco **`Imagem de Fundo (Frente)`**.
+2. Clique em **`+ Enviar Imagem de Fundo`** e selecione a foto do seu computador.
+3. A imagem cobrirá toda a superfície frontal da carta, ficando situada **atrás de todas as seções e textos**!
+
+---
+
+## 11. Passo 10: Gerenciamento de Camadas (Clique Direito e Botões)
+
+Se você desenhou várias seções uma por cima da outra (ex: uma imagem, uma moldura por cima e o texto por cima de tudo), você pode controlar o que fica na frente ou atrás:
+
+### 🖱️ Opção 1: Pelo Clique Direito sobre a Seção no Canva
+Clique com o **botão direito do mouse** sobre qualquer seção no centro da tela para abrir o menu de contexto:
+- **🔝 Trazer para o Topo**: Coloca a seção à frente de absolutamente tudo.
+- **⬆️ Mover para Frente**: Sobe a seção 1 nível de camada.
+- **⬇️ Mover para Trás**: Desce a seção 1 nível de camada.
+- **🔚 Enviar para o Fundo**: Envia a seção para trás de todas as outras seções.
+- **🗑️ Remover Seção**: Exclui a seção.
+
+### 🎛️ Opção 2: Pelo Painel de Propriedades (Direito)
+Ao selecionar uma seção, veja o indicador **`Camada (X de Y)`** no painel direito e use os botões **`🔝 Topo`**, **`⬆️ Subir`**, **`⬇️ Descer`** e **`🔚 Fundo`**.
+
+---
+
+## 12. Passo 11: Configurando o Verso das Cartas
+
+No **Painel Direito**, abra a seção **Verso da Carta**:
+
+1. **Escolha o Tipo de Verso**:
+   - **Sem Verso**: Gera apenas as frentes das cartas.
+   - **Imagem Fixa (Verso Único)**: Envie uma imagem (ex: o logo do seu jogo) que será impressa no verso de **todas** as cartas.
+   - **Por Coluna da Planilha**: Permite que cada carta tenha um verso diferente indicado em uma coluna do Excel.
+2. **Imposição do Verso (Duplex de Impressão)**:
+   - **Página Separada**: Gera todas as frentes na página 1, 2, 3 e todos os versos nas páginas seguintes.
+   - **Intercalado**: Alterna Página 1 (Frentes), Página 2 (Versos das frentes da pág 1 espelhados para impressão frente e verso na mesma folha).
+
+---
+
+## 13. Passo 12: Salvar e Carregar Layouts (Projetos .json)
+
+Você não precisa redesenhar o modelo da sua carta toda vez que abrir o site!
+
+- **Salvar Layout**: No topo do site, clique em **`Salvar Layout`**. Um arquivo `.json` será baixado no seu computador com todas as suas seções, tamanhos, fontes e cores salvas.
+- **Carregar Layout**: Quando voltar ao site outro dia, clique em **`Carregar Layout`** e selecione seu arquivo `.json`. O modelo inteiro será reconstruído na hora!
+
+---
+
+## 14. Passo 13: Exportação Final (PDF ou ZIP de Imagens)
+
+Quando o design da sua carta estiver pronto:
+
+1. No topo da página, ao lado do botão de exportar, escolha o **Formato de Exportação**:
+   - **PDF**: Gera um documento completo com todas as cartas alinhadas e prontas para impressão em papel A4.
+   - **JPG (Pacote .ZIP)**: Gera um arquivo zipado contendo cada carta salva como uma imagem individual em alta resolução (ótimo para cadastrar no Tabletop Simulator ou enviar para gráficas).
+2. Clique no botão amarelo **`Exportar Cartas`**.
+3. O servidor processará e baixará seu arquivo final em segundos!
+
+---
+
+## 15. Perguntas Frequentes e Dicas de Impressão
+
+### 🖨️ Qual papel usar para imprimir minhas cartas?
+Para protótipos com sensação de cartas reais de jogos profissionais, use papéis de gramatura entre **250g/m² e 300g/m²** (como papel **Offset**, **Couché Brilho** ou **Couché Fosco**).
+
+### ⚙️ As cartas saíram em tamanho diferente no PDF impresso. O que fazer?
+Na janela de impressão do seu computador ou leitor de PDF (Adobe Reader/Chrome), certifique-se de que a opção de escala esteja em **`Tamanho Real` (100%)**, e NUNCA em *"Ajustar à página"*.
+
+### 📐 O que são as Guias de Sangria (Bleed)?
+No painel direito, marque a caixa **`Exibir Guias de Sangria (3mm)`**. Uma linha guia vermelha aparecerá ao redor da carta. A sangria garante que, ao cortar a carta com a guilhotina ou tesoura, não sobrem fiapos brancos nas bordas das cartas!
+
+---
+
+*Pronto! Agora você possui o conhecimento completo para criar qualquer jogo de cartas profissional na Fábrica de Cartas.* 🚀🎴
