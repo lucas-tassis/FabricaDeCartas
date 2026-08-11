@@ -1,13 +1,15 @@
 package br.com.lteengenharia.fabricadecartas.service;
 
-import br.com.lteengenharia.fabricadecartas.config.AppConstants;
 import br.com.lteengenharia.fabricadecartas.dto.ColumnConfigDTO;
 import br.com.lteengenharia.fabricadecartas.dto.ColumnType;
-import br.com.lteengenharia.fabricadecartas.dto.ImageFit;
+import br.com.lteengenharia.fabricadecartas.dto.ImageDrawBounds;
 import br.com.lteengenharia.fabricadecartas.dto.TemplateConfigDTO;
 import br.com.lteengenharia.fabricadecartas.service.color.PdfColorService;
 import br.com.lteengenharia.fabricadecartas.service.font.PdfFontSanitizer;
+import br.com.lteengenharia.fabricadecartas.service.font.PdfTextLayoutEngine;
+import br.com.lteengenharia.fabricadecartas.service.font.TextLayoutResult;
 import br.com.lteengenharia.fabricadecartas.service.render.CardBackgroundRenderer;
+import br.com.lteengenharia.fabricadecartas.service.util.ImageBoundsCalculator;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -22,8 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileInputStream;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,19 +39,25 @@ public class CardRenderService {
     private final PdfColorService colorService;
     private final PdfFontSanitizer fontSanitizer;
     private final CardBackgroundRenderer backgroundRenderer;
+    private final PdfTextLayoutEngine textLayoutEngine;
+    private final ImageBoundsCalculator imageBoundsCalculator;
 
     public CardRenderService(SystemFontService systemFontService,
                              ImageStorageService imageStorageService,
                              ImageProcessingService imageProcessingService,
                              PdfColorService colorService,
                              PdfFontSanitizer fontSanitizer,
-                             CardBackgroundRenderer backgroundRenderer) {
+                             CardBackgroundRenderer backgroundRenderer,
+                             PdfTextLayoutEngine textLayoutEngine,
+                             ImageBoundsCalculator imageBoundsCalculator) {
         this.systemFontService = systemFontService;
         this.imageStorageService = imageStorageService;
         this.imageProcessingService = imageProcessingService;
         this.colorService = colorService;
         this.fontSanitizer = fontSanitizer;
         this.backgroundRenderer = backgroundRenderer;
+        this.textLayoutEngine = textLayoutEngine;
+        this.imageBoundsCalculator = imageBoundsCalculator;
     }
 
     public void drawCard(PDDocument document, PDPageContentStream contentStream,
@@ -130,7 +137,7 @@ public class CardRenderService {
     }
 
     private void drawBorderIfNeeded(PDPageContentStream contentStream, ColumnConfigDTO colConfig,
-                                    TemplateConfigDTO template, double startX, double startY) throws Exception {
+                                     TemplateConfigDTO template, double startX, double startY) throws Exception {
         if (colConfig.getBorderThickness() <= 0) return;
         Color color = colorService.parseColor(colConfig.getColor());
         contentStream.setLineWidth((float) colConfig.getBorderThickness());
@@ -166,42 +173,7 @@ public class CardRenderService {
                 float imgW = pdImage.getWidth();
                 float imgH = pdImage.getHeight();
 
-                float drawX = boxX, drawY = boxY, drawW = boxW, drawH = boxH;
-                ImageFit fit = colConfig.getImageFit();
-
-                switch (fit) {
-                    case CONTAIN -> {
-                        float scale = Math.min(boxW / imgW, boxH / imgH);
-                        drawW = imgW * scale;
-                        drawH = imgH * scale;
-                        drawX = boxX + (boxW - drawW) / 2f;
-                        drawY = boxY + (boxH - drawH) / 2f;
-                    }
-                    case COVER -> {
-                        float scale = Math.max(boxW / imgW, boxH / imgH);
-                        drawW = imgW * scale;
-                        drawH = imgH * scale;
-                        drawX = boxX + (boxW - drawW) / 2f;
-                        drawY = boxY + (boxH - drawH) / 2f;
-                    }
-                    case SMART -> {
-                        float containScale = Math.min(boxW / imgW, boxH / imgH);
-                        float scale = containScale > 1f
-                                ? Math.max(boxW / imgW, boxH / imgH)
-                                : containScale;
-                        drawW = imgW * scale;
-                        drawH = imgH * scale;
-                        drawX = boxX + (boxW - drawW) / 2f;
-                        drawY = boxY + (boxH - drawH) / 2f;
-                    }
-                    case FILL -> { }
-                    case NONE -> {
-                        drawW = imgW;
-                        drawH = imgH;
-                        drawX = boxX + (boxW - drawW) / 2f;
-                        drawY = boxY + (boxH - drawH) / 2f;
-                    }
-                }
+                ImageDrawBounds bounds = imageBoundsCalculator.calculate(boxX, boxY, boxW, boxH, imgW, imgH, colConfig.getImageFit());
 
                 contentStream.saveGraphicsState();
                 double[][] squares = colConfig.getSquareRects();
@@ -215,7 +187,7 @@ public class CardRenderService {
                     contentStream.addRect(boxX, boxY, boxW, boxH);
                 }
                 contentStream.clip();
-                contentStream.drawImage(pdImage, drawX, drawY, drawW, drawH);
+                contentStream.drawImage(pdImage, bounds.drawX(), bounds.drawY(), bounds.drawW(), bounds.drawH());
                 contentStream.restoreGraphicsState();
             } catch (Exception e) {
                 log.warn("Failed to draw image '{}': {}", imgFile.getName(), e.getMessage());
@@ -233,7 +205,7 @@ public class CardRenderService {
         PDFont font;
         Optional<File> fontFile = systemFontService.resolveFile(colConfig.getFontFamily(), colConfig.isBold());
         if (fontFile.isPresent()) {
-            try (java.io.FileInputStream fis = new java.io.FileInputStream(fontFile.get())) {
+            try (FileInputStream fis = new FileInputStream(fontFile.get())) {
                 font = PDType0Font.load(document, fis, false);
             } catch (Exception e) {
                 log.warn("Failed to load system font '{}', falling back to Standard14: {}",
@@ -256,26 +228,11 @@ public class CardRenderService {
         float targetWidth = is90or270 ? boxHeight : boxWidth;
         float targetHeight = is90or270 ? boxWidth : boxHeight;
 
-        List<String> lines = wrapText(text, font, fontSize, targetWidth);
-        if (lines.isEmpty()) return;
+        TextLayoutResult layoutResult = textLayoutEngine.calculateLayout(
+                text, font, fontSize, minFontSize, targetWidth, targetHeight
+        );
 
-        float leading = fontSize * 1.2f;
-        float capHeight = (font.getFontDescriptor() != null)
-                ? font.getFontDescriptor().getCapHeight()
-                : 700f;
-        float singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
-        float totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
-        float maxLineWidth = getMaxLineWidth(lines, font, fontSize);
-
-        // Auto-scale font size down if text height exceeds targetHeight OR any line width exceeds targetWidth
-        while ((totalTextHeight > targetHeight || maxLineWidth > targetWidth) && fontSize > minFontSize) {
-            fontSize -= 0.5f;
-            lines = wrapText(text, font, fontSize, targetWidth);
-            leading = fontSize * 1.2f;
-            singleLineCapHeight = capHeight / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
-            totalTextHeight = (lines.size() - 1) * leading + singleLineCapHeight;
-            maxLineWidth = getMaxLineWidth(lines, font, fontSize);
-        }
+        if (layoutResult.lines().isEmpty()) return;
 
         contentStream.saveGraphicsState();
 
@@ -313,16 +270,16 @@ public class CardRenderService {
         float boxTopY = (float) (startY + template.getCardHeight() - colConfig.getY());
         String vAlign = colConfig.getVAlign() == null ? "" : colConfig.getVAlign().toLowerCase();
         float startYOffset = switch (vAlign) {
-            case "center" -> boxTopY - (boxHeight - totalTextHeight) / 2f - singleLineCapHeight;
-            case "bottom" -> boxTopY - boxHeight + totalTextHeight - singleLineCapHeight;
-            default       -> boxTopY - singleLineCapHeight;
+            case "center" -> boxTopY - (boxHeight - layoutResult.totalTextHeight()) / 2f - layoutResult.singleLineCapHeight();
+            case "bottom" -> boxTopY - boxHeight + layoutResult.totalTextHeight() - layoutResult.singleLineCapHeight();
+            default       -> boxTopY - layoutResult.singleLineCapHeight();
         };
 
         String hAlign = colConfig.getTextAlign() == null ? "" : colConfig.getTextAlign().toLowerCase();
 
         float currentLineY = startYOffset;
-        for (String line : lines) {
-            float lineWidth = font.getStringWidth(line) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
+        for (String line : layoutResult.lines()) {
+            float lineWidth = font.getStringWidth(line) / 1000f * layoutResult.fontSize();
             float lineX = (float) (startX + colConfig.getX());
             lineX += switch (hAlign) {
                 case "center" -> (boxWidth - lineWidth) / 2f;
@@ -331,58 +288,15 @@ public class CardRenderService {
             };
 
             contentStream.beginText();
-            contentStream.setFont(font, fontSize);
+            contentStream.setFont(font, layoutResult.fontSize());
             contentStream.newLineAtOffset(lineX, currentLineY);
             contentStream.showText(line);
             contentStream.endText();
 
-            currentLineY -= leading;
+            currentLineY -= layoutResult.leading();
         }
 
         contentStream.restoreGraphicsState();
-    }
-
-    private List<String> wrapText(String text, PDFont font, float fontSize, float maxWidth) throws Exception {
-        List<String> result = new ArrayList<>();
-        if (text == null || text.isBlank()) return result;
-
-        String[] paragraphs = text.split("\r?\n");
-        for (String paragraph : paragraphs) {
-            if (paragraph.isBlank()) {
-                result.add("");
-                continue;
-            }
-            String[] words = paragraph.split(" ");
-            StringBuilder currentLine = new StringBuilder();
-
-            for (String word : words) {
-                if (currentLine.length() == 0) {
-                    currentLine.append(word);
-                } else {
-                    String testLine = currentLine.toString() + " " + word;
-                    float width = font.getStringWidth(testLine) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
-                    if (width <= maxWidth) {
-                        currentLine.append(" ").append(word);
-                    } else {
-                        result.add(currentLine.toString());
-                        currentLine = new StringBuilder(word);
-                    }
-                }
-            }
-            if (currentLine.length() > 0) {
-                result.add(currentLine.toString());
-            }
-        }
-        return result;
-    }
-
-    private float getMaxLineWidth(List<String> lines, PDFont font, float fontSize) throws Exception {
-        float maxW = 0f;
-        for (String line : lines) {
-            float w = font.getStringWidth(line) / (float) AppConstants.FONT_GLYPH_SCALE * fontSize;
-            if (w > maxW) maxW = w;
-        }
-        return maxW;
     }
 
     public void drawCardBack(PDDocument document, PDPageContentStream contentStream,

@@ -2,6 +2,7 @@ package br.com.lteengenharia.fabricadecartas.service;
 
 import br.com.lteengenharia.fabricadecartas.config.AppConstants;
 import br.com.lteengenharia.fabricadecartas.dto.TemplateConfigDTO;
+import br.com.lteengenharia.fabricadecartas.service.util.CardBackResolver;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -22,10 +23,14 @@ public class ImageExportService {
 
     private final CardRenderService cardRenderService;
     private final ZipExportService zipExportService;
+    private final CardBackResolver cardBackResolver;
 
-    public ImageExportService(CardRenderService cardRenderService, ZipExportService zipExportService) {
+    public ImageExportService(CardRenderService cardRenderService,
+                              ZipExportService zipExportService,
+                              CardBackResolver cardBackResolver) {
         this.cardRenderService = cardRenderService;
         this.zipExportService = zipExportService;
+        this.cardBackResolver = cardBackResolver;
     }
 
     public byte[] generate(List<Map<String, String>> data, TemplateConfigDTO template, String format) throws Exception {
@@ -58,7 +63,7 @@ public class ImageExportService {
 
             // 2. Render back (if enabled)
             if (hasBack) {
-                String backImageName = resolveBackImageName(row, template);
+                String backImageName = cardBackResolver.resolveBackImageName(row, template);
                 if (backImageName != null && !backImageName.isEmpty()) {
                     try (PDDocument backDoc = new PDDocument()) {
                         PDPage page = new PDPage(cardRect);
@@ -80,7 +85,7 @@ public class ImageExportService {
     }
 
     private BufferedImage renderCard(PDDocument cardDoc) throws Exception {
-        org.apache.pdfbox.pdmodel.PDPage page = cardDoc.getPage(0);
+        PDPage page = cardDoc.getPage(0);
         float scale = AppConstants.IMAGE_RENDER_DPI / AppConstants.PDF_POINTS_PER_INCH;
         int w = Math.round(page.getBBox().getWidth()  * scale);
         int h = Math.round(page.getBBox().getHeight() * scale);
@@ -93,18 +98,5 @@ public class ImageExportService {
         new PDFRenderer(cardDoc).renderPageToGraphics(0, g, scale);
         g.dispose();
         return img;
-    }
-
-    private String resolveBackImageName(Map<String, String> cardData, TemplateConfigDTO template) {
-        String type = template.getCardBackType();
-        if ("default".equalsIgnoreCase(type)) {
-            return template.getCardBackValue();
-        } else if ("column".equalsIgnoreCase(type)) {
-            String colName = template.getCardBackValue();
-            if (colName != null && !colName.isBlank()) {
-                return cardData.getOrDefault(colName, "");
-            }
-        }
-        return null;
     }
 }

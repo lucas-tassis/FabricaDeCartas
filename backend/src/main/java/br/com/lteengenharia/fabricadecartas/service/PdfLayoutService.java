@@ -2,6 +2,7 @@ package br.com.lteengenharia.fabricadecartas.service;
 
 import br.com.lteengenharia.fabricadecartas.config.AppConstants;
 import br.com.lteengenharia.fabricadecartas.dto.TemplateConfigDTO;
+import br.com.lteengenharia.fabricadecartas.service.util.CardBackResolver;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -9,6 +10,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +21,11 @@ public class PdfLayoutService {
     private static final double CARD_SPACING_PT = 0;
 
     private final CardRenderService cardRenderService;
+    private final CardBackResolver cardBackResolver;
 
-    public PdfLayoutService(CardRenderService cardRenderService) {
+    public PdfLayoutService(CardRenderService cardRenderService, CardBackResolver cardBackResolver) {
         this.cardRenderService = cardRenderService;
+        this.cardBackResolver = cardBackResolver;
     }
 
     public byte[] generate(List<Map<String, String>> data, TemplateConfigDTO template) throws Exception {
@@ -42,7 +46,7 @@ public class PdfLayoutService {
 
             boolean hasBack = !"none".equalsIgnoreCase(template.getCardBackType());
             boolean interleaved = "interleaved".equalsIgnoreCase(template.getCardBackDirection());
-            java.util.List<int[]> pageRanges = new java.util.ArrayList<>();
+            List<int[]> pageRanges = new ArrayList<>();
 
             int currentCard = 0;
             while (currentCard < data.size()) {
@@ -118,7 +122,7 @@ public class PdfLayoutService {
                 double startX = PAGE_MARGIN_PT + col * (effectiveWidth + CARD_SPACING_PT);
                 double startY = pageHeight - PAGE_MARGIN_PT - (row + 1) * effectiveHeight - row * CARD_SPACING_PT;
 
-                String backImageName = resolveBackImageName(data.get(cardIdx), template);
+                String backImageName = cardBackResolver.resolveBackImageName(data.get(cardIdx), template);
                 if (backImageName != null && !backImageName.isEmpty()) {
                     if (rotate90) {
                         contentStream.saveGraphicsState();
@@ -131,18 +135,5 @@ public class PdfLayoutService {
                 }
             }
         }
-    }
-
-    private String resolveBackImageName(Map<String, String> cardData, TemplateConfigDTO template) {
-        String type = template.getCardBackType();
-        if ("default".equalsIgnoreCase(type)) {
-            return template.getCardBackValue();
-        } else if ("column".equalsIgnoreCase(type)) {
-            String colName = template.getCardBackValue();
-            if (colName != null && !colName.isBlank()) {
-                return cardData.getOrDefault(colName, "");
-            }
-        }
-        return null;
     }
 }
