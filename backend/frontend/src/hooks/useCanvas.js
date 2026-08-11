@@ -1,7 +1,7 @@
 // Custom hook for canvas state: grid selection, pan, zoom, context menu, resize, drag-move
 import { useState, useRef, useEffect } from 'react';
 import { MM_TO_PX } from '../constants';
-import { getSectionBounds, safeParse } from '../utils';
+import { getSectionBounds, safeParse, getSquaresForShape } from '../utils';
 
 export function useCanvas(gridSize, sections, setSections, template, saveHistory, snapToGrid) {
   const parsedGridSize = safeParse(gridSize, 0.5);
@@ -42,6 +42,7 @@ export function useCanvas(gridSize, sections, setSections, template, saveHistory
   const [selectedSquares, setSelectedSquares] = useState([]);
   const [selectionBox, setSelectionBox] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [activeTool, setActiveTool] = useState('freehand');
   const [contextMenu, setContextMenu] = useState(null);
   const [resizeState, setResizeState] = useState(null);
   const [dragState, setDragState] = useState(null);
@@ -251,19 +252,29 @@ export function useCanvas(gridSize, sections, setSections, template, saveHistory
 
     if (isSelecting && selectionBox) {
       const gridPx = parsedGridSize * MM_TO_PX;
-      const minX = Math.min(selectionBox.startX, selectionBox.endX);
-      const maxX = Math.max(selectionBox.startX, selectionBox.endX);
-      const minY = Math.min(selectionBox.startY, selectionBox.endY);
-      const maxY = Math.max(selectionBox.startY, selectionBox.endY);
-
       let newSelection = [...selectedSquares];
-      for (let x = minX; x <= maxX; x += gridPx) {
-        for (let y = minY; y <= maxY; y += gridPx) {
-          const key = `${x},${y}`;
-          if (selectionBox.isAdding) {
-            if (!newSelection.includes(key)) newSelection.push(key);
-          } else {
-            newSelection = newSelection.filter(k => k !== key);
+
+      if (activeTool && activeTool !== 'freehand') {
+        const shapeSquares = getSquaresForShape(activeTool, selectionBox.startX, selectionBox.startY, selectionBox.endX, selectionBox.endY, gridPx);
+        if (selectionBox.isAdding) {
+          shapeSquares.forEach(key => { if (!newSelection.includes(key)) newSelection.push(key); });
+        } else {
+          newSelection = newSelection.filter(k => !shapeSquares.includes(k));
+        }
+      } else {
+        const minX = Math.min(selectionBox.startX, selectionBox.endX);
+        const maxX = Math.max(selectionBox.startX, selectionBox.endX);
+        const minY = Math.min(selectionBox.startY, selectionBox.endY);
+        const maxY = Math.max(selectionBox.startY, selectionBox.endY);
+
+        for (let x = minX; x <= maxX; x += gridPx) {
+          for (let y = minY; y <= maxY; y += gridPx) {
+            const key = `${x},${y}`;
+            if (selectionBox.isAdding) {
+              if (!newSelection.includes(key)) newSelection.push(key);
+            } else {
+              newSelection = newSelection.filter(k => k !== key);
+            }
           }
         }
       }
@@ -316,6 +327,7 @@ export function useCanvas(gridSize, sections, setSections, template, saveHistory
     zoom, pan, isPanning,
     selectedSquares, setSelectedSquares,
     selectionBox, isSelecting,
+    activeTool, setActiveTool,
     contextMenu, setContextMenu,
     handleCanvasMouseDown, handleMouseMove, handleMouseUp,
     handleWheel, handleContextMenu, startPan,

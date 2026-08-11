@@ -1,6 +1,7 @@
 import { Fragment, useState, useCallback, useRef, useEffect } from 'react';
 import { MM_TO_PX, MM_TO_PT } from '../constants';
-import { getSectionBounds, safeParse, mergeSquaresToRects } from '../utils';
+import { getSectionBounds, safeParse, mergeSquaresToRects, getSquaresForShape } from '../utils';
+import ShapeToolbar from './ShapeToolbar';
 
 const HANDLE_DIRS = ['n', 's', 'w', 'e'];
 const HANDLE_CURSOR = { n: 'ns-resize', s: 'ns-resize', w: 'ew-resize', e: 'ew-resize' };
@@ -38,6 +39,8 @@ function CardCanvas({
   totalRows,
   showPreviewCard1,
   setShowPreviewCard1,
+  activeTool,
+  setActiveTool,
 }) {
   const canvasWidthPx = safeParse(template.cardWidth, 63.5) * MM_TO_PX;
   const canvasHeightPx = safeParse(template.cardHeight, 88) * MM_TO_PX;
@@ -92,6 +95,10 @@ function CardCanvas({
             Total: {totalRows} carta{totalRows !== 1 ? 's' : ''}
           </span>
         </div>
+      )}
+
+      {setActiveTool && (
+        <ShapeToolbar activeTool={activeTool} setActiveTool={setActiveTool} />
       )}
 
       <div style={{ position: 'relative' }}>
@@ -166,7 +173,24 @@ function CardCanvas({
               }}
             />
           )}
-          {selectionBox && (
+          {selectionBox && activeTool && activeTool !== 'freehand' ? (
+            getSquaresForShape(activeTool, selectionBox.startX, selectionBox.startY, selectionBox.endX, selectionBox.endY, gridPx).map(key => {
+              const [x, y] = key.split(',').map(Number);
+              return (
+                <div key={`preview-${key}`} className="selection-preview-cell" style={{
+                  position: 'absolute',
+                  left: `${x}px`,
+                  top: `${y}px`,
+                  width: `${gridPx}px`,
+                  height: `${gridPx}px`,
+                  backgroundColor: selectionBox.isAdding ? 'rgba(59, 130, 246, 0.45)' : 'rgba(239, 68, 68, 0.45)',
+                  border: `1px solid ${selectionBox.isAdding ? '#3b82f6' : '#ef4444'}`,
+                  pointerEvents: 'none',
+                  zIndex: 10,
+                }} />
+              );
+            })
+          ) : selectionBox && (
             <div
               className="selection-box"
               style={{

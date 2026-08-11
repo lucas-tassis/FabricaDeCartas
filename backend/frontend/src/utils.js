@@ -73,3 +73,90 @@ export const mergeSquaresToRects = (squares, gridPx) => {
   return merged;
 };
 
+export const isPointInShape = (shapeType, px, py) => {
+  if (px < 0 || px > 1 || py < 0 || py > 1) return false;
+  if (shapeType === 'freehand' || shapeType === 'rectangle') return true;
+
+  const dx = px - 0.5;
+  const dy = py - 0.5;
+
+  if (shapeType === 'circle' || shapeType === 'ellipse') {
+    return dx * dx + dy * dy <= 0.25;
+  }
+
+  if (shapeType === 'triangle') {
+    // Pointing upwards, apex at (0.5, 0), base from (0,1) to (1,1)
+    return py >= 0 && py <= 1 && Math.abs(dx) <= 0.5 * py;
+  }
+
+  if (shapeType === 'diamond') {
+    // Vertices at (0.5, 0), (1, 0.5), (0.5, 1), (0, 0.5)
+    return Math.abs(dx) + Math.abs(dy) <= 0.5;
+  }
+
+  if (shapeType === 'hexagon') {
+    // Regular hexagon
+    const a = 0.5;
+    const h = a * Math.sqrt(3) / 2; // ~0.433
+    if (Math.abs(dx) > a || Math.abs(dy) > h) return false;
+    return (h * (a - Math.abs(dx)) - (a / 2) * Math.abs(dy)) >= 0;
+  }
+
+  if (shapeType === 'star4' || shapeType === 'star5' || shapeType === 'star6') {
+    const numPoints = shapeType === 'star4' ? 4 : shapeType === 'star5' ? 5 : 6;
+    const rRatio = shapeType === 'star4' ? 0.38 : shapeType === 'star5' ? 0.42 : 0.45;
+    const R = 0.5;
+    const r = R * rRatio;
+
+    const angle = Math.atan2(dy, dx);
+    const sectorAngle = (2 * Math.PI) / numPoints;
+    // Align top point to -PI/2
+    let normAngle = (angle + Math.PI / 2 + Math.PI * 4) % sectorAngle;
+    let beta = Math.abs(normAngle - sectorAngle / 2);
+
+    const d = Math.hypot(dx, dy);
+    const halfSector = sectorAngle / 2;
+    const vOutX = R * Math.cos(halfSector);
+    const vOutY = R * Math.sin(halfSector);
+
+    // Cross product test against edge from (r, 0) to (vOutX, vOutY)
+    const cross = (vOutX - r) * (d * Math.sin(beta)) - vOutY * (d * Math.cos(beta) - r);
+    return cross >= 0;
+  }
+
+  if (shapeType === 'heart') {
+    // Parametric heart: ((2.2*dx)^2 + (-2.2*dy + 0.1)^2 - 1)^3 - (2.2*dx)^2 * (-2.2*dy + 0.1)^3 <= 0
+    const hx = dx * 2.3;
+    const hy = -dy * 2.3 + 0.15;
+    const term = hx * hx + hy * hy - 1;
+    return term * term * term - hx * hx * hy * hy * hy <= 0;
+  }
+
+  return true;
+};
+
+export const getSquaresForShape = (shapeType, startX, startY, endX, endY, gridPx) => {
+  const minX = Math.min(startX, endX);
+  const maxX = Math.max(startX, endX);
+  const minY = Math.min(startY, endY);
+  const maxY = Math.max(startY, endY);
+
+  const width = maxX - minX + gridPx;
+  const height = maxY - minY + gridPx;
+
+  const squares = [];
+  for (let x = minX; x <= maxX; x += gridPx) {
+    for (let y = minY; y <= maxY; y += gridPx) {
+      // Cell center normalized within bounding box [0, 1]
+      const px = (x + gridPx / 2 - minX) / width;
+      const py = (y + gridPx / 2 - minY) / height;
+
+      if (isPointInShape(shapeType, px, py)) {
+        squares.push(`${x},${y}`);
+      }
+    }
+  }
+  return squares;
+};
+
+

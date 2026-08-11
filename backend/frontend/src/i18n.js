@@ -114,7 +114,18 @@ const resources = {
       "scan_local_fonts": "Buscar fontes do meu computador",
       "font_uploaded_success": "Fonte carregada com sucesso!",
       "shutdown": "Desligar App",
-      "shutdown_message": "O aplicativo foi desligado com sucesso. Você já pode fechar esta aba do navegador."
+      "shutdown_message": "O aplicativo foi desligado com sucesso. Você já pode fechar esta aba do navegador.",
+      "shape_tools": "Ferramentas de Formas",
+      "tool_freehand": "Mão Livre (Grade)",
+      "tool_rectangle": "Retângulo",
+      "tool_ellipse": "Círculo / Elipse",
+      "tool_triangle": "Triângulo",
+      "tool_star4": "Estrela (4 pontas)",
+      "tool_star5": "Estrela (5 pontas)",
+      "tool_star6": "Estrela (6 pontas)",
+      "tool_diamond": "Losango",
+      "tool_hexagon": "Hexágono",
+      "tool_heart": "Coração"
     }
   },
   en: {
@@ -219,7 +230,18 @@ const resources = {
       "scan_local_fonts": "Scan local system fonts",
       "font_uploaded_success": "Font uploaded successfully!",
       "shutdown": "Shutdown App",
-      "shutdown_message": "The application has been shut down successfully. You can now close this browser tab."
+      "shutdown_message": "The application has been shut down successfully. You can now close this browser tab.",
+      "shape_tools": "Shape Tools",
+      "tool_freehand": "Freehand Grid",
+      "tool_rectangle": "Rectangle",
+      "tool_ellipse": "Circle / Ellipse",
+      "tool_triangle": "Triangle",
+      "tool_star4": "4-Point Star",
+      "tool_star5": "5-Point Star",
+      "tool_star6": "6-Point Star",
+      "tool_diamond": "Diamond",
+      "tool_hexagon": "Hexagon",
+      "tool_heart": "Heart"
     }
   }
 };

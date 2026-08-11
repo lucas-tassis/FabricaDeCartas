@@ -58,6 +58,7 @@ function App() {
     canvasRef, zoom, pan, isPanning,
     selectedSquares, setSelectedSquares,
     selectionBox, contextMenu, setContextMenu,
+    activeTool, setActiveTool,
     handleCanvasMouseDown, handleMouseMove, handleMouseUp,
     handleWheel, handleContextMenu, startPan,
     handleResizeStart,
@@ -449,6 +450,8 @@ function App() {
             totalRows={totalRows}
             showPreviewCard1={showPreviewCard1}
             setShowPreviewCard1={setShowPreviewCard1}
+            activeTool={activeTool}
+            setActiveTool={setActiveTool}
           />
           <ImageAssets />
         </div>
