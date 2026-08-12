@@ -46,7 +46,6 @@ function ShapeToolbar({ activeTool, setActiveTool }) {
                 title={t(tool.key)}
               >
                 <span className="shape-tool-icon">{tool.icon}</span>
-                <span className="shape-tool-label">{t(tool.key)}</span>
               </button>
             );
           })}
