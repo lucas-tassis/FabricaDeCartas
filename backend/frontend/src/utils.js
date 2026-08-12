@@ -102,9 +102,9 @@ export const isPointInShape = (shapeType, px, py) => {
     return (h * (a - Math.abs(dx)) - (a / 2) * Math.abs(dy)) >= 0;
   }
 
-  if (shapeType === 'star4' || shapeType === 'star5' || shapeType === 'star6') {
-    const numPoints = shapeType === 'star4' ? 4 : shapeType === 'star5' ? 5 : 6;
-    const rRatio = shapeType === 'star4' ? 0.38 : shapeType === 'star5' ? 0.42 : 0.45;
+  if (shapeType === 'star4' || shapeType === 'star5' || shapeType === 'star5_wide' || shapeType === 'star6') {
+    const numPoints = shapeType === 'star4' ? 4 : (shapeType === 'star5' || shapeType === 'star5_wide') ? 5 : 6;
+    const rRatio = shapeType === 'star4' ? 0.38 : shapeType === 'star5' ? 0.42 : shapeType === 'star5_wide' ? 0.63 : 0.45;
     const R = 0.5;
     const r = R * rRatio;
 
