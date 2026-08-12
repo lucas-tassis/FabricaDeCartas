@@ -46,7 +46,27 @@ export function useCanvas(gridSize, sections, setSections, template, saveHistory
   const [contextMenu, setContextMenu] = useState(null);
   const [resizeState, setResizeState] = useState(null);
   const [dragState, setDragState] = useState(null);
-  // dragState: { sectionId, offsetX, offsetY, origSquares, origMinX, origMinY }
+  const lastMouseEventRef = useRef(null);
+
+  // Dynamic aspect ratio constraint toggle on Ctrl / Shift keydown & keyup during selection
+  useEffect(() => {
+    if (!isSelecting) return;
+    const handleKeyChange = (e) => {
+      if ((e.key === 'Control' || e.key === 'Shift') && lastMouseEventRef.current) {
+        handleMouseMove({
+          ...lastMouseEventRef.current,
+          ctrlKey: e.ctrlKey || e.key === 'Control',
+          shiftKey: e.shiftKey || e.key === 'Shift',
+        });
+      }
+    };
+    window.addEventListener('keydown', handleKeyChange);
+    window.addEventListener('keyup', handleKeyChange);
+    return () => {
+      window.removeEventListener('keydown', handleKeyChange);
+      window.removeEventListener('keyup', handleKeyChange);
+    };
+  }, [isSelecting, selectionBox, zoom, parsedGridSize]);
 
   // ── Resize ──────────────────────────────────────────────────────────────────
  
@@ -219,13 +239,23 @@ export function useCanvas(gridSize, sections, setSections, template, saveHistory
 
     // ── Grid selection ──
     if (!canvasRef.current || !isSelecting || !selectionBox) return;
+    lastMouseEventRef.current = e;
 
     const rect = canvasRef.current.getBoundingClientRect();
     const rawX = (e.clientX - rect.left) / zoom;
     const rawY = (e.clientY - rect.top) / zoom;
-    const snappedX = Math.floor(rawX / gridPx) * gridPx;
-    const snappedY = Math.floor(rawY / gridPx) * gridPx;
-    setSelectionBox({ ...selectionBox, endX: snappedX, endY: snappedY });
+    let snappedX = Math.floor(rawX / gridPx) * gridPx;
+    let snappedY = Math.floor(rawY / gridPx) * gridPx;
+
+    if (e.ctrlKey || e.shiftKey) {
+      const deltaX = snappedX - selectionBox.startX;
+      const deltaY = snappedY - selectionBox.startY;
+      const dist = Math.max(Math.abs(deltaX), Math.abs(deltaY));
+      snappedX = selectionBox.startX + (deltaX >= 0 ? dist : -dist);
+      snappedY = selectionBox.startY + (deltaY >= 0 ? dist : -dist);
+    }
+
+    setSelectionBox(prev => prev ? { ...prev, endX: snappedX, endY: snappedY } : null);
   };
 
   // ── Mouse up ─────────────────────────────────────────────────────────────────
